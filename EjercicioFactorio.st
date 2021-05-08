@@ -11,45 +11,41 @@ DenotativeObject subclass: #Caja
 Caja class
 	instanceVariableNames: 'contenido'!
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:07:37'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:13:00'!
 agregar: unaMena
-	contenido add: unaMena.! !
+	
+	^contenido add: unaMena.! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:42:38'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:13:10'!
 agregarMenas: aCollectionOfMenas
+	
 	^contenido addAll: aCollectionOfMenas.! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/3/2021 20:25:40'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:16:33'!
 cantidadDeContenido
 	
 	^contenido size.! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:08:26'!
-cantidadDeMenas
-	^contenido size.! !
-
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 19:29:48'!
-cantidadDeMenasDeCarbon
-	^contenido count: [:unaMena | unaMena = 'una mena de carbon'].! !
-
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 19:27:14'!
-cantidadDeMenasDeHierro
-	^contenido count: [:unaMena | unaMena = 'una mena de hierro'].! !
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:17:03'!
+cantidadDeMenas: tipo
+	
+	^contenido count: [:unaMena | unaMena = tipo].! !
 
 !Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 15:09:25'!
 contenido
 
 	^contenido! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/7/2021 12:12:48'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	contenido := ((OrderedCollection new) add: 'una mena de carbon'; yourself).! !
+	contenido := ((OrderedCollection new) add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; yourself).! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:09:06'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:17:32'!
 vaciar
-	contenido := OrderedCollection new.! !
+	
+	^contenido := OrderedCollection new.! !
 
 
 !classDefinition: #CintaA category: 'EjercicioFactorio'!
@@ -70,17 +66,17 @@ agregarMenas: aCollectionOfMenas
 
 	^contenido addAll: aCollectionOfMenas.! !
 
-!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/3/2021 21:48:34'!
-cantidadDeMenas
+!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:16:33'!
+cantidadDeContenido
 
 	^ contenido size.! !
 
-!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/3/2021 21:18:12'!
-destino: unDestino 
+!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:12:41'!
+destino: nuevoDestino 
 	
-	destinoCinta := unDestino! !
+	^destinoCinta := nuevoDestino.! !
 
-!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/7/2021 12:12:48'!
+!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -96,10 +92,10 @@ transportar
 	
 	^contenido.! !
 
-!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/3/2021 21:51:25'!
+!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:12:35'!
 vaciar
 
-	contenido := OrderedCollection new.! !
+	^contenido := OrderedCollection new.! !
 
 
 !classDefinition: #CintaB category: 'EjercicioFactorio'!
@@ -120,17 +116,17 @@ agregarMenas: aCollectionOfMenas
 
 	^contenido addAll: aCollectionOfMenas.! !
 
-!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:11'!
-cantidadDeMenas
+!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:16:33'!
+cantidadDeContenido
 
 	^ contenido size.! !
 
-!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:11'!
-destino: unDestino 
+!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:12:06'!
+destino: nuevoDestino 
 	
-	destinoCinta := unDestino! !
+	^destinoCinta := nuevoDestino.! !
 
-!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/7/2021 12:12:48'!
+!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -146,10 +142,10 @@ transportar
 	
 	^contenido.! !
 
-!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:11'!
+!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:12:18'!
 vaciar
 
-	contenido := OrderedCollection new.! !
+	^contenido := OrderedCollection new.! !
 
 
 !classDefinition: #ExtractorDeCarbon category: 'EjercicioFactorio'!
@@ -163,7 +159,7 @@ DenotativeObject subclass: #ExtractorDeCarbon
 
 !classDefinition: 'ExtractorDeCarbon class' category: 'EjercicioFactorio'!
 ExtractorDeCarbon class
-	instanceVariableNames: 'energiaActual destino'!
+	instanceVariableNames: 'destino energiaActual costoPorMena'!
 
 !ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/15/2021 21:23:04'!
 agregarEnergia: energiaExtra
@@ -171,18 +167,20 @@ agregarEnergia: energiaExtra
 	energiaActual := energiaActual +	energiaExtra.
 	^energiaExtra.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 5/2/2021 19:44:58'!
-conjuntoDeMenasDeCarbonCantidad: cantidadDeMenas
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 16:51:51'!
+conjuntoDeMenas: cantidadDeMenas
 
 	^ Array new: cantidadDeMenas withAll: 'una mena de carbon'! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:30:49'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:08:57'!
 costoDeExtraccionPorMena
-	^5 * joule.! !
+	
+	^ costoPorMena.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:29:41'!
-destino: aContenedor 
-	destino := aContenedor.! !
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:10'!
+destino: nuevoDestino 
+	
+	^destino := nuevoDestino.! !
 
 !ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/15/2021 21:21:02'!
 energiaActual
@@ -190,41 +188,47 @@ energiaActual
 	^energiaActual.
 ! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:31:29'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:09:48'!
 energiaParaExtraerTodasLasMenasPosibles
+	
 	^self menasAExtraerSegunEnergiaActual * self costoDeExtraccionPorMena.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:34:57'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:09:56'!
 extraer
 	| cantidadDeMenas energiaConsumida |
+	
 	cantidadDeMenas := self menasAExtraerSegunEnergiaActual.
 	energiaConsumida := self energiaParaExtraerTodasLasMenasPosibles.
 	self sacarEnergia: energiaConsumida.
-	^destino agregarMenas: (self conjuntoDeMenasDeCarbonCantidad: cantidadDeMenas).! !
+	^destino agregarMenas: (self conjuntoDeMenas: cantidadDeMenas).! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/7/2021 12:12:48'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
-	destino := Caja.! !
+	destino := CintaA.
+	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 4; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
+	costoPorMena := (SimpleMeasure basicNew instVarAt: 1 put: 5; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:30:27'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:10:00'!
 menasAExtraerSegunEnergiaActual
+	
 	^energiaActual // self costoDeExtraccionPorMena.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 5/2/2021 19:36:12'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 16:56:24'!
+nuevoCostoDeExtraccion: costo
+
+	^costoPorMena := costo ! !
+
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:10:31'!
 ponerEnCeroLaEnergia
-	energiaActual := 0 * joule.! !
+	
+	^energiaActual := 0 * joule.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:31:57'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:10:36'!
 sacarEnergia: energiaASacar
-	energiaActual := energiaActual - energiaASacar! !
-
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 4/18/2021 15:40:43'!
-setearCosteDeExtraccion: coste
-	costeDeExtraccion := coste.
-	^coste! !
+	
+	^energiaActual := energiaActual - energiaASacar! !
 
 
 !classDefinition: #ExtractorDeHierro category: 'EjercicioFactorio'!
@@ -238,7 +242,7 @@ DenotativeObject subclass: #ExtractorDeHierro
 
 !classDefinition: 'ExtractorDeHierro class' category: 'EjercicioFactorio'!
 ExtractorDeHierro class
-	instanceVariableNames: 'energiaActual destino'!
+	instanceVariableNames: 'destino energiaActual costoPorMena'!
 
 !ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
 agregarEnergia: energiaExtra
@@ -246,18 +250,20 @@ agregarEnergia: energiaExtra
 	energiaActual := energiaActual +	energiaExtra.
 	^energiaExtra.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:40'!
-conjuntoDeMenasDeHierroCantidad: cantidadDeMenas
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 16:51:28'!
+conjuntoDeMenas: cantidadDeMenas
 
 	^ Array new: cantidadDeMenas withAll: 'una mena de hierro'! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:10:48'!
 costoDeExtraccionPorMena
-	^5 * joule.! !
+	
+	^costoPorMena.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
-destino: aContenedor 
-	destino := aContenedor.! !
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:05'!
+destino: nuevoDestino 
+	
+	^destino := nuevoDestino.! !
 
 !ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
 energiaActual
@@ -265,97 +271,47 @@ energiaActual
 	^energiaActual.
 ! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:16'!
 energiaParaExtraerTodasLasMenasPosibles
+	
 	^self menasAExtraerSegunEnergiaActual * self costoDeExtraccionPorMena.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:59'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:21'!
 extraer
 	| cantidadDeMenas energiaConsumida |
+	
 	cantidadDeMenas := self menasAExtraerSegunEnergiaActual.
 	energiaConsumida := self energiaParaExtraerTodasLasMenasPosibles.
 	self sacarEnergia: energiaConsumida.
-	^destino agregarMenas: (self conjuntoDeMenasDeHierroCantidad: cantidadDeMenas).! !
+	^destino agregarMenas: (self conjuntoDeMenas: cantidadDeMenas).! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/7/2021 12:12:48'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
-	destino := CintaB.! !
+	destino := CintaB.
+	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 4; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
+	costoPorMena := (SimpleMeasure basicNew instVarAt: 1 put: 5; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:25'!
 menasAExtraerSegunEnergiaActual
+	
 	^energiaActual // self costoDeExtraccionPorMena.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 16:59:14'!
+nuevoCostoDeExtraccion: costo
+	
+	^costoPorMena := costo.! !
+
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:31'!
 ponerEnCeroLaEnergia
-	energiaActual := 0 * joule.! !
+	
+	^energiaActual := 0 * joule.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:11:35'!
 sacarEnergia: energiaASacar
-	energiaActual := energiaActual - energiaASacar! !
-
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 14:08:21'!
-setearCosteDeExtraccion: coste
-	costeDeExtraccion := coste.
-	^coste! !
-
-
-!classDefinition: #PruebasDeExtractorDeCarbon category: 'EjercicioFactorio'!
-DenotativeObject subclass: #PruebasDeExtractorDeCarbon
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'EjercicioFactorio'!
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'PruebasDeExtractorDeCarbon class' category: 'EjercicioFactorio'!
-PruebasDeExtractorDeCarbon class
-	instanceVariableNames: ''!
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 5/2/2021 19:37:39'!
-setUp
-	ExtractorDeCarbon destino: Caja.
-	Caja vaciar.! !
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:41:43'!
-test01UnExtractorSinEnergiaNoExtraeMenas
-	"Cuando no cargue energia en el extractor, no saco menas"
-	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	Assert isTrue: ExtractorDeCarbon extraer isEmpty.
-! !
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:46:54'!
-test02UnExtractorConInsuficienteEnergiaNoExtraeMenas
-	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 1 * joule.
-	Assert isTrue: ExtractorDeCarbon extraer isEmpty.
-! !
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:47:56'!
-test03UnExtractorConSuficienteEnergiaExtrae1Mena
-	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 5 * joule.
-	Assert that: ExtractorDeCarbon extraer size isEqualTo: 1.
-! !
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:49:57'!
-test04UnExtractorConservaLaEnergiaNoUtilizada
-	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 7 * joule.
-	Assert that: ExtractorDeCarbon extraer size isEqualTo: 1.
-	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 2 * joule.
-! !
-
-!PruebasDeExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'SF 4/20/2021 18:50:53'!
-test05UnExtractorPuedeExtraerMultiplesMenasConMuchaEnergia
-	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 50 * joule.
-	Assert that: ExtractorDeCarbon extraer size isEqualTo: 10.
-	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 0 * joule.
-! !
+	
+	^energiaActual := energiaActual - energiaASacar! !
 
 
 !classDefinition: #PruebasDeFactorio category: 'EjercicioFactorio'!
@@ -371,74 +327,68 @@ DenotativeObject subclass: #PruebasDeFactorio
 PruebasDeFactorio class
 	instanceVariableNames: ''!
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 19:28:48'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:19:18'!
 testEscenarioExtractorCaja
+
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
 	ExtractorDeCarbon agregarEnergia: 5 * joule.
+	ExtractorDeCarbon nuevoCostoDeExtraccion: 5 * joule.
 	ExtractorDeCarbon destino: Caja.
 	Caja vaciar.
+	
 	ExtractorDeCarbon extraer.
-	Assert that: Caja cantidadDeMenas isEqualTo: 1.
-	Assert that: Caja cantidadDeMenasDeCarbon isEqualTo: 1.! !
+	
+	Assert that: Caja cantidadDeContenido isEqualTo: 1.
+	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 1.! !
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 19:24:44'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:42'!
 testEscenarioExtractorCintaCaja
 	
-	| cantidadDeMenasDeCarbon |
-	
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 5 * joule.
+	ExtractorDeCarbon agregarEnergia: 64 * joule.
+	ExtractorDeCarbon nuevoCostoDeExtraccion: 5 * joule.
 	ExtractorDeCarbon destino: CintaA.
 	CintaA vaciar.
 	CintaA destino: Caja.
 	Caja vaciar.
-	ExtractorDeCarbon extraer.
-	"Se pasa el carbon a la cinta, por lo que debería haber una mena en la cinta"
-	Assert that: CintaA cantidadDeMenas isEqualTo: 1.
 	
+	ExtractorDeCarbon extraer.
 	CintaA transportar.
 	
-	"La cinta deja de tener una mena, y esta pasa a la caja"
-	cantidadDeMenasDeCarbon := Caja contenido count: [:unaMena | unaMena = 'una mena de carbon'].
-	Assert that: CintaA cantidadDeMenas isEqualTo: 0.
-	Assert that: Caja cantidadDeMenas isEqualTo: 1.
-	Assert that: cantidadDeMenasDeCarbon isEqualTo: 1.! !
+	Assert that: CintaA cantidadDeContenido isEqualTo: 0.
+	Assert that: Caja cantidadDeContenido isEqualTo: 12.
+	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 12.
+	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 4 * joule.! !
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/6/2021 19:27:57'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:25:59'!
 testEscenarioExtractorExtractorCintaCintaCaja
 
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
-	ExtractorDeCarbon agregarEnergia: 5 * joule.
-	
+	ExtractorDeCarbon agregarEnergia: 12 * joule.
+	ExtractorDeCarbon nuevoCostoDeExtraccion: 5 * joule.
 	ExtractorDeHierro ponerEnCeroLaEnergia.
-	ExtractorDeHierro agregarEnergia: 5 * joule.
-	
+	ExtractorDeHierro agregarEnergia: 19 * joule.
+	ExtractorDeHierro nuevoCostoDeExtraccion: 5 * joule.
 	ExtractorDeCarbon destino: CintaA.
-	ExtractorDeHierro destino: CintaB.
-	
+	ExtractorDeHierro destino: CintaB.	
 	CintaA vaciar.
 	CintaB vaciar.
-	
 	CintaA destino: Caja.
 	CintaB destino: Caja.
-	
 	Caja vaciar.
 	
 	ExtractorDeCarbon extraer.
 	ExtractorDeHierro extraer.
-	"Las cintas tienen 1 mena cada una"
-	Assert that: CintaA cantidadDeMenas isEqualTo: 1.
-	Assert that: CintaB cantidadDeMenas isEqualTo: 1.
-	
 	CintaA transportar.
 	CintaB transportar.
 	
-	"Las cintas depositaron su mena en la caja"
-	Assert that: CintaA cantidadDeMenas isEqualTo: 0.
-	Assert that: CintaB cantidadDeMenas isEqualTo: 0.
-	Assert that: Caja cantidadDeMenas isEqualTo: 2.
-	Assert that: Caja cantidadDeMenasDeCarbon isEqualTo: 1.
-	Assert that: Caja cantidadDeMenasDeHierro isEqualTo: 1.! !
+	Assert that: CintaA cantidadDeContenido isEqualTo: 0.
+	Assert that: CintaB cantidadDeContenido isEqualTo: 0.
+	Assert that: Caja cantidadDeContenido isEqualTo: 5.
+	Assert that: (Caja cantidadDeMenas: 'una mena de hierro') isEqualTo: 3.
+	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 2.
+	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 2 * joule.
+	Assert that: ExtractorDeHierro energiaActual isEqualTo: 4 * joule.! !
 
 Caja initializeAfterFileIn!
 CintaA initializeAfterFileIn!
