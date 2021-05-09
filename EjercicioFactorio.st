@@ -26,8 +26,8 @@ cantidadDeContenido
 	
 	^contenido size.! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:17:03'!
-cantidadDeMenas: tipo
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:27'!
+cantidadDeMenasDeTipo: tipo
 	
 	^contenido count: [:unaMena | unaMena = tipo].! !
 
@@ -36,11 +36,11 @@ contenido
 
 	^contenido! !
 
-!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
+!Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:57'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	contenido := ((OrderedCollection new) add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; add: 'una mena de carbon'; yourself).! !
+	contenido := ((OrderedCollection new) add: 'una mena de carbon'; yourself).! !
 
 !Caja class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:17:32'!
 vaciar
@@ -76,7 +76,7 @@ destino: nuevoDestino
 	
 	^destinoCinta := nuevoDestino.! !
 
-!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
+!CintaA class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:57'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -126,7 +126,7 @@ destino: nuevoDestino
 	
 	^destinoCinta := nuevoDestino.! !
 
-!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
+!CintaB class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:57'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -202,12 +202,12 @@ extraer
 	self sacarEnergia: energiaConsumida.
 	^destino agregarMenas: (self conjuntoDeMenas: cantidadDeMenas).! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:57'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	destino := CintaA.
-	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 4; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
+	destino := Caja.
+	energiaActual := (SimpleMeasure basicNew instVarAt: 1 put: 0; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).
 	costoPorMena := (SimpleMeasure basicNew instVarAt: 1 put: 5; instVarAt: 2 put: (BaseUnit basicNew instVarAt: 1 put: 'joule'; instVarAt: 2 put: 'joules'; instVarAt: 3 put: 'j'; yourself); yourself).! !
 
 !ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:10:00'!
@@ -285,7 +285,7 @@ extraer
 	self sacarEnergia: energiaConsumida.
 	^destino agregarMenas: (self conjuntoDeMenas: cantidadDeMenas).! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:48'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:57'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -327,7 +327,7 @@ DenotativeObject subclass: #PruebasDeFactorio
 PruebasDeFactorio class
 	instanceVariableNames: ''!
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:19:18'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:27'!
 testEscenarioExtractorCaja
 
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
@@ -339,9 +339,9 @@ testEscenarioExtractorCaja
 	ExtractorDeCarbon extraer.
 	
 	Assert that: Caja cantidadDeContenido isEqualTo: 1.
-	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 1.! !
+	Assert that: (Caja cantidadDeMenasDeTipo: 'una mena de carbon') isEqualTo: 1.! !
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:26:42'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:27'!
 testEscenarioExtractorCintaCaja
 	
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
@@ -357,10 +357,10 @@ testEscenarioExtractorCintaCaja
 	
 	Assert that: CintaA cantidadDeContenido isEqualTo: 0.
 	Assert that: Caja cantidadDeContenido isEqualTo: 12.
-	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 12.
+	Assert that: (Caja cantidadDeMenasDeTipo: 'una mena de carbon') isEqualTo: 12.
 	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 4 * joule.! !
 
-!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/8/2021 17:25:59'!
+!PruebasDeFactorio class methodsFor: 'as yet unclassified' stamp: 'IAM 5/9/2021 20:23:27'!
 testEscenarioExtractorExtractorCintaCintaCaja
 
 	ExtractorDeCarbon ponerEnCeroLaEnergia.
@@ -385,8 +385,8 @@ testEscenarioExtractorExtractorCintaCintaCaja
 	Assert that: CintaA cantidadDeContenido isEqualTo: 0.
 	Assert that: CintaB cantidadDeContenido isEqualTo: 0.
 	Assert that: Caja cantidadDeContenido isEqualTo: 5.
-	Assert that: (Caja cantidadDeMenas: 'una mena de hierro') isEqualTo: 3.
-	Assert that: (Caja cantidadDeMenas: 'una mena de carbon') isEqualTo: 2.
+	Assert that: (Caja cantidadDeMenasDeTipo: 'una mena de hierro') isEqualTo: 3.
+	Assert that: (Caja cantidadDeMenasDeTipo: 'una mena de carbon') isEqualTo: 2.
 	Assert that: ExtractorDeCarbon energiaActual isEqualTo: 2 * joule.
 	Assert that: ExtractorDeHierro energiaActual isEqualTo: 4 * joule.! !
 
