@@ -44,7 +44,7 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'fm 5/18/2021 17:56:12'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'IAM 5/19/2021 19:29:49'!
 test03CanNotAddACustomerWithEmptyName 
 
 	| customerBook |
@@ -131,20 +131,23 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 ! !
 
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:41:44'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:34:37'!
 assertThatCustomerBook: customerBook hasNumberOfCustomers: amountOfcustomers withNumberOfActive: amountOfActive andNumberOfSuspended: amountOfSuspended
+
 	self assert: amountOfActive equals: customerBook numberOfActiveCustomers.
 	self assert: amountOfSuspended equals: customerBook numberOfSuspendedCustomers.
 	self assert: amountOfcustomers equals: customerBook numberOfCustomers.! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:02:24'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:34:55'!
 assertThatOnlyClientInCustomerBook: customerBook is: client
+
 	self assert: customerBook numberOfCustomers = 1.
 	self assert: (customerBook includesCustomerNamed: client)! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:03:57'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:35:06'!
 assertThatRunningTimeOf: codeToRun isLessThan: maxTime
 	| time |
+	
 	time := codeToRun timeToRun.
 	self assert: time < maxTime.
 	
@@ -152,29 +155,33 @@ assertThatRunningTimeOf: codeToRun isLessThan: maxTime
 	
 	! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:53:01'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:35:13'!
 assertThatThisCodeFails: codeToTest withError: error andWhenItFailsRun: codeToRun
+	
 	[ self failTestIfNoErrorIsThrownOn: codeToTest]
 		on: error 
 		do: codeToRun! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:07:39'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:35:16'!
 failTestIfNoErrorIsThrownOn: codeToRun
+	
 	codeToRun value.
 	self fail.! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 16:57:23'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:35:19'!
 newCustomerBookWithClient: client
 	| newCustomerBook |
+	
 	newCustomerBook := CustomerBook new.
 	newCustomerBook addCustomerNamed: client.
 	^newCustomerBook 
 	
 	! !
 
-!CustomerBookTest methodsFor: 'helpers' stamp: 'fm 5/18/2021 17:28:54'!
+!CustomerBookTest methodsFor: 'helpers' stamp: 'IAM 5/19/2021 18:35:26'!
 newCustomerBookWithSuspendedClient: client
 	| customerBook |
+	
 	customerBook := self newCustomerBookWithClient: client.
 	customerBook suspendCustomerNamed: client.
 	^customerBook 
@@ -196,46 +203,28 @@ initialize
 	suspended:= OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'IAM 5/19/2021 19:59:35'!
 addCustomerNamed: aName
 
 	aName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	((active includes: aName) or: [suspended includes: aName]) ifTrue: [ self signalCustomerAlreadyExists ].
+	(self includesCustomerNamed: aName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
-	active add: aName ! !
+	active add: aName.! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'IAM 5/19/2021 19:40:25'!
 removeCustomerNamed: aName 
- 
-	1 to: active size do: 
-	[ :index |
-		aName = (active at: index)
-			ifTrue: [
-				active removeAt: index.
-				^ aName 
-			] 
-	].
+ 	
+	active remove: aName ifAbsent: [
+		suspended remove: aName ifAbsent:[^ NotFound signal]].! !
 
-	1 to: suspended size do: 	
-	[ :index |
-		aName = (suspended at: index)
-			ifTrue: [
-				suspended removeAt: index.
-				^ aName 
-			] 
-	].
-	
-	^ NotFound signal.
-! !
-
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'IAM 5/19/2021 19:53:24'!
 suspendCustomerNamed: aName 
 	
-	(active includes: aName) ifFalse: [^CantSuspend signal].
+	(self includesActiveCustomerNamed: aName) ifFalse: [^CantSuspend signal].
 	
 	active remove: aName.
 	
-	suspended add: aName
+	suspended add: aName.
 ! !
 
 
@@ -244,10 +233,10 @@ numberOfActiveCustomers
 	
 	^active size! !
 
-!CustomerBook methodsFor: 'accessing' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'accessing' stamp: 'IAM 5/19/2021 20:00:32'!
 numberOfCustomers
 	
-	^active size + suspended size! !
+	^self numberOfActiveCustomers + self numberOfSuspendedCustomers.! !
 
 !CustomerBook methodsFor: 'accessing' stamp: 'NR 9/19/2018 17:36:09'!
 numberOfSuspendedCustomers
@@ -255,10 +244,20 @@ numberOfSuspendedCustomers
 	^suspended size! !
 
 
-!CustomerBook methodsFor: 'testing' stamp: 'NR 4/3/2019 10:14:26'!
+!CustomerBook methodsFor: 'testing' stamp: 'IAM 5/19/2021 20:06:39'!
+includesActiveCustomerNamed: aName
+
+	^active includes: aName.! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'IAM 5/19/2021 20:08:37'!
 includesCustomerNamed: aName
 
-	^(active includes: aName) or: [ suspended includes: aName ]! !
+	^(self includesActiveCustomerNamed: aName) or:  [self includesSuspendedCustomerNamed: aName].! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'IAM 5/19/2021 20:06:33'!
+includesSuspendedCustomerNamed: aName
+
+	^suspended includes: aName.! !
 
 !CustomerBook methodsFor: 'testing' stamp: 'NR 4/3/2019 10:14:26'!
 isEmpty
