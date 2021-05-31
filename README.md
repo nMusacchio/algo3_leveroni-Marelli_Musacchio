@@ -5,3 +5,5 @@ Repositorio de los ejercicios de la materia Algoritmos y programación 3, cáted
 Ejercicio 1: https://github.com/algoritmos-iii/ejercicios-2021-1c/blob/main/01-Factorio/Consigna.md
 
 Ejercicio 2: https://github.com/algoritmos-iii/ejercicios-2021-1c/blob/main/02-CodigoRepetido/Consigna.md
+
+Ejercicio 3: https://github.com/algoritmos-iii/ejercicios-2021-1c/tree/main/03-Numeros/Consigna.md
