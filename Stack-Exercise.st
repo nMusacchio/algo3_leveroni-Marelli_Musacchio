@@ -5,14 +5,14 @@ TestCase subclass: #OOStackTest
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStackTest methodsFor: 'test' stamp: 'HernanWilkinson 5/7/2012 11:30'!
+!OOStackTest methodsFor: 'test' stamp: 'fm 6/7/2021 13:30:37'!
 test01StackShouldBeEmptyWhenCreated
 
 	| stack |
 	
 	stack := OOStack new.
 	
-	self assert: stack isEmpty! !
+	self assert: stack isEmpty.! !
 
 !OOStackTest methodsFor: 'test' stamp: 'NR 5/13/2020 13:29:55'!
 test02PushAddElementsToTheStack
@@ -152,50 +152,39 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'IAM 6/6/2021 23:17:53'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:25:56'!
+initialize
+
+	elements := OrderedCollection new.! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:01:09'!
 isEmpty
 	
-	elements isNil ifTrue: [^true].
-	
-	elements isEmpty ifTrue: [^true] ifFalse: [^false].! !
+	^elements isEmpty.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'IAM 6/6/2021 23:26:36'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:05:06'!
 pop
 
 	self isEmpty ifTrue: [
 		self error: OOStack stackEmptyErrorDescription.	
-	] ifFalse:[ | lastElement |
-		lastElement := 	elements last. 
-		elements removeLast;	yourself.
-		^lastElement.
-	]! !
+	] ifFalse:[ ^elements removeLast. ]! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'IAM 6/6/2021 23:07:36'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:08:25'!
 push: anElement
 
-	self isEmpty ifTrue: [
-		elements := OrderedCollection with: anElement
-	] ifFalse: [
-		elements addLast: anElement 
-	]! !
+	^elements addLast: anElement ! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'IAM 6/6/2021 23:25:18'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:08:41'!
 size 
+	
+	^elements size! !
 
-	self isEmpty ifTrue:[
-		^0	
-	] ifFalse: [
-		^elements size
-	]! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'IAM 6/6/2021 23:28:16'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:31:30'!
 top
 
 	self isEmpty ifTrue:[
 		self error: OOStack stackEmptyErrorDescription.
-	] ifFalse: [
-		^elements last.
-	]! !
+	] ifFalse: [ ^elements last ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -207,7 +196,6 @@ OOStack class
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
-
 
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
