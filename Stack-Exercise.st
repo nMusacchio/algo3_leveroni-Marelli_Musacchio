@@ -311,10 +311,11 @@ Object subclass: #SentenceFinderByPrefix
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:28:53'!
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/9/2021 16:27:49'!
 find: aPrefix
 	| matchingSentences | 
 	
+	self validatePrefix: aPrefix.
 	matchingSentences := OrderedCollection new.
 	self findRecursivePrefix: aPrefix andStoreIn: matchingSentences.
 	
@@ -338,6 +339,15 @@ findRecursivePrefix: aPrefix andStoreIn: aCollection
 initializeWithStack: aStack
 
 	sentenceStack := aStack.! !
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/9/2021 16:38:31'!
+validatePrefix: aPrefix
+	| containsSpace |
+	containsSpace := aPrefix findString: ' ' > 0.
+	(aPrefix isEmpty or: [containsSpace ]) ifTrue: [
+		SentenceFinderByPrefix error: 'Invalid Prefix'.
+	]
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
