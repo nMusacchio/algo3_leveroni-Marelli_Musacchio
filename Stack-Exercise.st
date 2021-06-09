@@ -147,44 +147,49 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'elements'
+	instanceVariableNames: 'topNode'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:25:56'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:09:34'!
 initialize
 
-	elements := OrderedCollection new.! !
+	topNode := BaseNode new.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:01:09'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:09:40'!
 isEmpty
 	
-	^elements isEmpty.! !
+	^topNode isEmpty.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:05:06'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:10:49'!
 pop
+	| topNodeValue | 
+	topNodeValue := self top.
+	
+	topNode := topNode nextNode.
+	
+	^topNodeValue.! !
 
-	self isEmpty ifTrue: [
-		self error: OOStack stackEmptyErrorDescription.	
-	] ifFalse:[ ^elements removeLast. ]! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:08:25'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:49'!
 push: anElement
+	| newTopNode |	
+	
+	newTopNode := Node withValue: anElement beforeNode: topNode .
+	
+	topNode := newTopNode.
+	
+	! !
 
-	^elements addLast: anElement ! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:08:41'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:27'!
 size 
 	
-	^elements size! !
+	^topNode size! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/7/2021 13:31:30'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:20'!
 top
-
-	self isEmpty ifTrue:[
-		self error: OOStack stackEmptyErrorDescription.
-	] ifFalse: [ ^elements last ]! !
+	
+	^topNode top.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -198,9 +203,149 @@ stackEmptyErrorDescription
 	^ 'Stack is empty'! !
 
 
-!classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
-Object subclass: #SentenceFinderByPrefix
+!classDefinition: #OOStackNode category: 'Stack-Exercise'!
+Object subclass: #OOStackNode
+	instanceVariableNames: 'nextNode value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:27'!
+isEmpty
+
+	self subclassResponsibility ! !
+
+!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:33'!
+nextNode
+
+	self subclassResponsibility ! !
+
+!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:51'!
+size
+
+	self subclassResponsibility ! !
+
+!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:21'!
+top
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #BaseNode category: 'Stack-Exercise'!
+OOStackNode subclass: #BaseNode
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:12:04'!
+isEmpty
+
+	^true.! !
+
+!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:07:34'!
+nextNode
+
+	OOStack error: OOStack stackEmptyErrorDescription.! !
+
+!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:30:01'!
+size
+
+	^0.! !
+
+!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:09:58'!
+top
+
+	OOStack error: OOStack stackEmptyErrorDescription.! !
+
+
+!classDefinition: #Node category: 'Stack-Exercise'!
+OOStackNode subclass: #Node
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:17'!
+initializeWithValue: nodeValue beforeNode: aNode
+
+	nextNode := aNode.
+	value := nodeValue.! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:12:16'!
+isEmpty
+
+	^false.! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:09'!
+nextNode
+
+	^nextNode.! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:09'!
+size 
+
+	^1 + (nextNode size).! !
+
+!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:17'!
+top 
+
+	^value.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Node class' category: 'Stack-Exercise'!
+Node class
+	instanceVariableNames: ''!
+
+!Node class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:05:51'!
+withValue: nodeValue beforeNode: aNode
+
+	^self new initializeWithValue: nodeValue beforeNode: aNode.! !
+
+
+!classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
+Object subclass: #SentenceFinderByPrefix
+	instanceVariableNames: 'sentenceStack'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:28:53'!
+find: aPrefix
+	| matchingSentences | 
+	
+	matchingSentences := OrderedCollection new.
+	self findRecursivePrefix: aPrefix andStoreIn: matchingSentences.
+	
+	^matchingSentences.
+
+	! !
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:44:18'!
+findRecursivePrefix: aPrefix andStoreIn: aCollection
+	| currentNodeValue |
+	
+	sentenceStack isEmpty ifTrue: [ ^self ].
+	currentNodeValue := sentenceStack pop.
+	((currentNodeValue findString: aPrefix) = 1) ifTrue: [ aCollection add: currentNodeValue ].
+	self findRecursivePrefix: aPrefix andStoreIn: aCollection.
+	sentenceStack push: currentNodeValue.
+	
+	! !
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:24:42'!
+initializeWithStack: aStack
+
+	sentenceStack := aStack.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SentenceFinderByPrefix class' category: 'Stack-Exercise'!
+SentenceFinderByPrefix class
+	instanceVariableNames: ''!
+
+!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:24:10'!
+with: aStack
+
+	^self new initializeWithStack: aStack.! !
