@@ -139,137 +139,128 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #SentenceFinderByPrefixTest category: 'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
-	instanceVariableNames: 'stack sentencesCollection'
+	instanceVariableNames: 'sentenceStack sentenceFinder sentences findResult'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefixTest methodsFor: 'helpers' stamp: 'IAM 6/9/2021 21:21:00'!
-assertThatStackIsConsistent
+!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'fm 6/10/2021 13:07:01'!
+assertThat: aFinderResult is: aCollection
+
+	self assert: (aFinderResult hasEqualElements: aCollection).! !
+
+!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'fm 6/10/2021 12:19:17'!
+assertThatFind: aPrefix raisesInvalidPrefixErrorWith: aSentenceFinder
 	
-	sentencesCollection reverseDo: [:sentence |
-		self assert: sentence = stack top.
-		stack pop.
+	self should: [ aSentenceFinder find: aPrefix ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = SentenceFinderByPrefix invalidPrefixErrorMessage 
 	].! !
 
-!SentenceFinderByPrefixTest methodsFor: 'helpers' stamp: 'IAM 6/9/2021 21:11:59'!
-pushSentencesInStack: aCollection
+!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'fm 6/10/2021 13:25:31'!
+assertThatStackRemainsUnchanged
+	
+	sentences reverseDo: [:sentence |
+		self assert: sentence = sentenceStack top.
+		sentenceStack pop.
+	].! !
 
-	sentencesCollection := aCollection.
-	self pushElementsOfCollectionInStack: sentencesCollection.! !
+!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'fm 6/10/2021 13:25:31'!
+createSentenceFinderWithCurrentStack
+	
+	^SentenceFinderByPrefix with: sentenceStack.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'helpers' stamp: 'IAM 6/9/2021 21:04:00'!
-setUp
-
-	stack := OOStack new.! !
-
-
-!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'IAM 6/9/2021 20:37:33'!
-pushElementsOfCollectionInStack: aCollection	
-
+!SentenceFinderByPrefixTest methodsFor: 'private' stamp: 'fm 6/10/2021 13:10:12'!
+createStackWithSentences: aCollection	
+	
+	| newStack |
+	newStack := OOStack new.
+	sentences := aCollection.
+	
 	aCollection do: [:sentence |
-		stack push: sentence.	
-	].! !
+		newStack push: sentence.	
+	].
+
+	^newStack! !
 
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:22:05'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:26:07'!
 test01EmptyStackWithValidPrefix
 
-	| sentenceFinder result |
-	sentenceFinder := SentenceFinderByPrefix with: stack.
+	sentenceStack := self createStackWithSentences: #().
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	result := sentenceFinder find: 'wint'.
+	findResult := sentenceFinder find: 'something'.
 	
-	self assert: result isEmpty.! !
+	self assert: findResult isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:21:22'!
-test02EmptyPrefixFails
-
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:25:52'!
+test02EmptyPrefixRaisesInvalidPrefix
 	
-	| sentenceFinder |
-	self pushSentencesInStack: #('Winter is coming').
-	sentenceFinder := SentenceFinderByPrefix with: stack.
+	sentenceStack := self createStackWithSentences: #('Winter is coming' 'winning is everything' 'winter is calming').
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	self
-		should: [ sentenceFinder find: '' ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = SentenceFinderByPrefix invalidPrefixErrorMessage ].
-		
-	self assertThatStackIsConsistent.! !
+	self assertThatFind: '' raisesInvalidPrefixErrorWith: sentenceFinder .
+	self assertThatStackRemainsUnchanged.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:21:16'!
-test03PrefixWithSpacesFails
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:25:51'!
+test03PrefixWithSpacesRaisesInvalidPrefix
 
-	| sentenceFinder |
+	sentenceStack := self createStackWithSentences: #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	self pushSentencesInStack: #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
-	sentenceFinder := SentenceFinderByPrefix with: stack.
-	
-	self
-		should: [ sentenceFinder find: 'winter is' ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = SentenceFinderByPrefix invalidPrefixErrorMessage ].
-		
-	self assertThatStackIsConsistent.! !
+	self assertThatFind: 'winter is' raisesInvalidPrefixErrorWith: sentenceFinder.
+	self assertThatStackRemainsUnchanged.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:21:12'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:26:07'!
 test04ValidSearchMatchingNone
 
-	| sentenceFinder  resultLowerCasePrefix resultUpperCasePrefix |
+	sentenceStack := self createStackWithSentences: #('Winter is coming' 'Winning is great' 'The winds of Winter' 'Winter is here').
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	self pushSentencesInStack: #('Winter is coming' 'Winning is everything' 'The winds of Winter' 'Winter is here').
-	sentenceFinder := SentenceFinderByPrefix with: stack.
-	resultLowerCasePrefix := 	sentenceFinder find: 'wint'.
-	resultUpperCasePrefix := 	sentenceFinder find: 'WINT'.
+	findResult := 	sentenceFinder find: 'win'.
 	
-	self assert: resultLowerCasePrefix size = 0.
-	self assert: resultUpperCasePrefix size = 0.
-	
-	self assertThatStackIsConsistent.
+	self assert: findResult isEmpty.
+	self assertThatStackRemainsUnchanged.
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:21:08'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:26:07'!
 test05ValidSearchMatchingSome
 
-	| sentenceFinder result |
+	sentenceStack := self createStackWithSentences: #('winter is coming' 'winning is everything' 'Winds of Winter' 'Winter is here').
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	self pushSentencesInStack: #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
-	sentenceFinder := SentenceFinderByPrefix with: stack.
-	result := 	sentenceFinder find: 'Wint'.
+	findResult := 	sentenceFinder find: 'Win'.
 	
-	self assert: result size = 1.
-	self assert: ((result at: 1) = 'Winter is here').
-	
-	self assertThatStackIsConsistent.! !
+	self assertThat: findResult is: #('Winter is here' 'Winds of Winter').
+	self assertThatStackRemainsUnchanged.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:19:49'!
-test06StackRemainsUnchangedAfterValidSearch
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:26:07'!
+test06ValidSearchMatchingAll
 
-	| sentenceFinder |
-	sentencesCollection := #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
-	self pushElementsOfCollectionInStack: sentencesCollection.
-
-	sentenceFinder := SentenceFinderByPrefix with: stack.
-	sentenceFinder find: 'win'.
+	sentenceStack := self createStackWithSentences: #('hello world 1' 'hello world 2' 'hello world 3' 'hello world 4' ).
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
 	
-	self assertThatStackIsConsistent.
+	findResult := 	sentenceFinder find: 'hello'.
+	
+	self assertThat: findResult is: #('hello world 4' 'hello world 3' 'hello world 2' 'hello world 1').
+	self assertThatStackRemainsUnchanged.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'fm 6/10/2021 13:25:51'!
+test07SearchIsCaseSensitive
+
+	|  resultLowerCasePrefix resultUpperCasePrefix |
+	sentenceStack := self createStackWithSentences: #('Winter is coming' 'Winning is everything' 'Winter is here' 'hello world' 'hello mom' 'hello dad').
+	sentenceFinder := self createSentenceFinderWithCurrentStack.
+	
+	resultLowerCasePrefix := 	sentenceFinder find: 'win'.
+	resultUpperCasePrefix := 	sentenceFinder find: 'Hello'.
+	
+	self assert: resultLowerCasePrefix isEmpty.
+	self assert: resultUpperCasePrefix isEmpty.
+	self assertThatStackRemainsUnchanged.
 	! !
-
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'IAM 6/9/2021 21:24:49'!
-test07ValidSearchMatchingAll
-
-	| sentenceFinder result |
-	
-	self pushSentencesInStack: #('winter is coming' 'winter is coming 2' 'winter is coming 1' 'winter is coming 4').
-	sentenceFinder := SentenceFinderByPrefix with: stack.
-	result := 	sentenceFinder find: 'wint'.
-	
-	self assert: result size = 4.
-	self assert: ((result at: 1) = 'winter is coming 4').
-	
-	self assertThatStackIsConsistent.! !
 
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
@@ -279,27 +270,19 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:09:34'!
-initialize
-
-	topNode := BaseNode new.! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:09:40'!
-isEmpty
-	
-	^topNode isEmpty.! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:10:49'!
+!OOStack methodsFor: 'operations' stamp: 'fm 6/10/2021 11:21:52'!
 pop
+
 	| topNodeValue | 
-	topNodeValue := self top.
 	
+	topNodeValue := self top.
 	topNode := topNode nextNode.
 	
 	^topNodeValue.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:49'!
+!OOStack methodsFor: 'operations' stamp: 'fm 6/10/2021 11:22:12'!
 push: anElement
+
 	| newTopNode |	
 	
 	newTopNode := Node withValue: anElement beforeNode: topNode .
@@ -308,15 +291,27 @@ push: anElement
 	
 	! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:27'!
+!OOStack methodsFor: 'operations' stamp: 'fm 6/8/2021 20:13:27'!
 size 
 	
 	^topNode size! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:13:20'!
+!OOStack methodsFor: 'operations' stamp: 'fm 6/10/2021 11:22:26'!
 top
 	
-	^topNode top.! !
+	^topNode top! !
+
+
+!OOStack methodsFor: 'testing' stamp: 'fm 6/8/2021 20:09:40'!
+isEmpty
+	
+	^topNode isEmpty.! !
+
+
+!OOStack methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:09:34'!
+initialize
+
+	topNode := BaseNode new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -329,7 +324,6 @@ stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
 
-
 
 !classDefinition: #OOStackNode category: 'Stack-Exercise'!
 Object subclass: #OOStackNode
@@ -338,22 +332,24 @@ Object subclass: #OOStackNode
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:27'!
+!OOStackNode methodsFor: 'testing' stamp: 'fm 6/8/2021 20:08:27'!
 isEmpty
 
 	self subclassResponsibility ! !
 
-!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:33'!
+
+!OOStackNode methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:08:33'!
 nextNode
 
 	self subclassResponsibility ! !
 
-!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:51'!
+
+!OOStackNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:08:51'!
 size
 
 	self subclassResponsibility ! !
 
-!OOStackNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:08:21'!
+!OOStackNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:08:21'!
 top
 
 	self subclassResponsibility ! !
@@ -366,22 +362,24 @@ OOStackNode subclass: #BaseNode
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:12:04'!
+!BaseNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:04'!
 isEmpty
 
 	^true.! !
 
-!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:07:34'!
+
+
+!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:07:34'!
 nextNode
 
 	OOStack error: OOStack stackEmptyErrorDescription.! !
 
-!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:30:01'!
+!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:30:01'!
 size
 
 	^0.! !
 
-!BaseNode methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:09:58'!
+!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:09:58'!
 top
 
 	OOStack error: OOStack stackEmptyErrorDescription.! !
@@ -394,31 +392,34 @@ OOStackNode subclass: #Node
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:17'!
-initializeWithValue: nodeValue beforeNode: aNode
-
-	nextNode := aNode.
-	value := nodeValue.! !
-
-!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 19:12:16'!
+!Node methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:16'!
 isEmpty
 
 	^false.! !
 
-!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:09'!
-nextNode
 
-	^nextNode.! !
-
-!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:09'!
+!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:09'!
 size 
 
 	^1 + (nextNode size).! !
 
-!Node methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:06:17'!
+!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:17'!
 top 
 
 	^value.! !
+
+
+!Node methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:06:09'!
+nextNode
+
+	^nextNode.! !
+
+
+!Node methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:06:17'!
+initializeWithValue: nodeValue beforeNode: aNode
+
+	nextNode := aNode.
+	value := nodeValue.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -467,7 +468,7 @@ validatePrefix: aPrefix
 	! !
 
 
-!SentenceFinderByPrefix methodsFor: 'util' stamp: 'IAM 6/9/2021 19:26:36'!
+!SentenceFinderByPrefix methodsFor: 'operations' stamp: 'IAM 6/9/2021 19:26:36'!
 find: aPrefix
 	| matchingSentences |
 	
