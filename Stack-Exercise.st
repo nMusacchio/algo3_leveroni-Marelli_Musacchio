@@ -280,12 +280,12 @@ pop
 	
 	^topNodeValue.! !
 
-!OOStack methodsFor: 'operations' stamp: 'fm 6/10/2021 11:22:12'!
+!OOStack methodsFor: 'operations' stamp: 'IAM 6/10/2021 18:51:53'!
 push: anElement
 
 	| newTopNode |	
 	
-	newTopNode := Node withValue: anElement beforeNode: topNode .
+	newTopNode := OOStackRegularNode withValue: anElement beforeNode: topNode .
 	
 	topNode := newTopNode.
 	
@@ -355,54 +355,6 @@ top
 	self subclassResponsibility ! !
 
 
-!classDefinition: #Node category: 'Stack-Exercise'!
-OOStackNode subclass: #Node
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!Node methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:16'!
-isEmpty
-
-	^false.! !
-
-
-!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:09'!
-size 
-
-	^1 + (nextNode size).! !
-
-!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:17'!
-top 
-
-	^value.! !
-
-
-!Node methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:06:09'!
-nextNode
-
-	^nextNode.! !
-
-
-!Node methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:06:17'!
-initializeWithValue: nodeValue beforeNode: aNode
-
-	nextNode := aNode.
-	value := nodeValue.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Node class' category: 'Stack-Exercise'!
-Node class
-	instanceVariableNames: ''!
-
-!Node class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:05:51'!
-withValue: nodeValue beforeNode: aNode
-
-	^self new initializeWithValue: nodeValue beforeNode: aNode.! !
-
-
 !classDefinition: #OOStackBaseNode category: 'Stack-Exercise'!
 OOStackNode subclass: #OOStackBaseNode
 	instanceVariableNames: ''
@@ -430,6 +382,54 @@ size
 top
 
 	OOStack error: OOStack stackEmptyErrorDescription.! !
+
+
+!classDefinition: #OOStackRegularNode category: 'Stack-Exercise'!
+OOStackNode subclass: #OOStackRegularNode
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackRegularNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:16'!
+isEmpty
+
+	^false.! !
+
+
+!OOStackRegularNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:09'!
+size 
+
+	^1 + (nextNode size).! !
+
+!OOStackRegularNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:17'!
+top 
+
+	^value.! !
+
+
+!OOStackRegularNode methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:06:09'!
+nextNode
+
+	^nextNode.! !
+
+
+!OOStackRegularNode methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:06:17'!
+initializeWithValue: nodeValue beforeNode: aNode
+
+	nextNode := aNode.
+	value := nodeValue.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'OOStackRegularNode class' category: 'Stack-Exercise'!
+OOStackRegularNode class
+	instanceVariableNames: ''!
+
+!OOStackRegularNode class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:05:51'!
+withValue: nodeValue beforeNode: aNode
+
+	^self new initializeWithValue: nodeValue beforeNode: aNode.! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
