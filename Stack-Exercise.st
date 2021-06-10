@@ -308,10 +308,10 @@ isEmpty
 	^topNode isEmpty.! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:09:34'!
+!OOStack methodsFor: 'initialization' stamp: 'iam 6/10/2021 18:47:52'!
 initialize
 
-	topNode := BaseNode new.! !
+	topNode := OOStackBaseNode new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -353,36 +353,6 @@ size
 top
 
 	self subclassResponsibility ! !
-
-
-!classDefinition: #BaseNode category: 'Stack-Exercise'!
-OOStackNode subclass: #BaseNode
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!BaseNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:04'!
-isEmpty
-
-	^true.! !
-
-
-
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:07:34'!
-nextNode
-
-	OOStack error: OOStack stackEmptyErrorDescription.! !
-
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:30:01'!
-size
-
-	^0.! !
-
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:09:58'!
-top
-
-	OOStack error: OOStack stackEmptyErrorDescription.! !
 
 
 !classDefinition: #Node category: 'Stack-Exercise'!
@@ -431,6 +401,35 @@ Node class
 withValue: nodeValue beforeNode: aNode
 
 	^self new initializeWithValue: nodeValue beforeNode: aNode.! !
+
+
+!classDefinition: #OOStackBaseNode category: 'Stack-Exercise'!
+OOStackNode subclass: #OOStackBaseNode
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackBaseNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:04'!
+isEmpty
+
+	^true.! !
+
+
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:07:34'!
+nextNode
+
+	OOStack error: OOStack stackEmptyErrorDescription.! !
+
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:30:01'!
+size
+
+	^0.! !
+
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:09:58'!
+top
+
+	OOStack error: OOStack stackEmptyErrorDescription.! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
