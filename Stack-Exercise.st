@@ -280,12 +280,12 @@ pop
 	
 	^topNodeValue.! !
 
-!OOStack methodsFor: 'operations' stamp: 'fm 6/10/2021 11:22:12'!
+!OOStack methodsFor: 'operations' stamp: 'IAM 6/10/2021 18:51:53'!
 push: anElement
 
 	| newTopNode |	
 	
-	newTopNode := Node withValue: anElement beforeNode: topNode .
+	newTopNode := OOStackRegularNode withValue: anElement beforeNode: topNode .
 	
 	topNode := newTopNode.
 	
@@ -308,10 +308,10 @@ isEmpty
 	^topNode isEmpty.! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:09:34'!
+!OOStack methodsFor: 'initialization' stamp: 'iam 6/10/2021 18:47:52'!
 initialize
 
-	topNode := BaseNode new.! !
+	topNode := OOStackBaseNode new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -355,67 +355,66 @@ top
 	self subclassResponsibility ! !
 
 
-!classDefinition: #BaseNode category: 'Stack-Exercise'!
-OOStackNode subclass: #BaseNode
+!classDefinition: #OOStackBaseNode category: 'Stack-Exercise'!
+OOStackNode subclass: #OOStackBaseNode
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!BaseNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:04'!
+!OOStackBaseNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:04'!
 isEmpty
 
 	^true.! !
 
 
-
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:07:34'!
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:07:34'!
 nextNode
 
 	OOStack error: OOStack stackEmptyErrorDescription.! !
 
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:30:01'!
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:30:01'!
 size
 
 	^0.! !
 
-!BaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:09:58'!
+!OOStackBaseNode methodsFor: 'operations' stamp: 'fm 6/8/2021 19:09:58'!
 top
 
 	OOStack error: OOStack stackEmptyErrorDescription.! !
 
 
-!classDefinition: #Node category: 'Stack-Exercise'!
-OOStackNode subclass: #Node
+!classDefinition: #OOStackRegularNode category: 'Stack-Exercise'!
+OOStackNode subclass: #OOStackRegularNode
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!Node methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:16'!
+!OOStackRegularNode methodsFor: 'testing' stamp: 'fm 6/8/2021 19:12:16'!
 isEmpty
 
 	^false.! !
 
 
-!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:09'!
+!OOStackRegularNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:09'!
 size 
 
 	^1 + (nextNode size).! !
 
-!Node methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:17'!
+!OOStackRegularNode methodsFor: 'operations' stamp: 'fm 6/8/2021 20:06:17'!
 top 
 
 	^value.! !
 
 
-!Node methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:06:09'!
+!OOStackRegularNode methodsFor: 'accessing' stamp: 'fm 6/8/2021 20:06:09'!
 nextNode
 
 	^nextNode.! !
 
 
-!Node methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:06:17'!
+!OOStackRegularNode methodsFor: 'initialization' stamp: 'fm 6/8/2021 20:06:17'!
 initializeWithValue: nodeValue beforeNode: aNode
 
 	nextNode := aNode.
@@ -423,11 +422,11 @@ initializeWithValue: nodeValue beforeNode: aNode
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Node class' category: 'Stack-Exercise'!
-Node class
+!classDefinition: 'OOStackRegularNode class' category: 'Stack-Exercise'!
+OOStackRegularNode class
 	instanceVariableNames: ''!
 
-!Node class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:05:51'!
+!OOStackRegularNode class methodsFor: 'as yet unclassified' stamp: 'fm 6/8/2021 20:05:51'!
 withValue: nodeValue beforeNode: aNode
 
 	^self new initializeWithValue: nodeValue beforeNode: aNode.! !
