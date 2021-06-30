@@ -113,8 +113,8 @@ test09MoveBackwardHeadingWest
 	marsRover assert: (marsRover position = (2@1)).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:21:06'!
-test10
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:09:50'!
+test10MoveForwardAndBackward
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -125,8 +125,8 @@ test10
 	marsRover assert: (marsRover position = startingPosition).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:21:06'!
-test11
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:10:11'!
+test11MoveForwardTwice
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -137,20 +137,8 @@ test11
 	marsRover assert: (marsRover position = (1@3)).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:29:05'!
-test12
-
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingEastAt: startingPosition.
-	
-	marsRover command: 'ffbffb'.
-	
-	marsRover assert: (marsRover position = (3@1)).
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:30:36'!
-test13
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:11:16'!
+test12RotateToRight
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -161,8 +149,8 @@ test13
 	marsRover assert: (marsRover position = startingPosition).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:31:19'!
-test14
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:11:58'!
+test13MoveForwardAndRotateToRight
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -173,8 +161,8 @@ test14
 	marsRover assert: (marsRover position = (2@2)).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:37:48'!
-test15
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:12:19'!
+test14MoveForwardAndRotateToLeft
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -185,8 +173,8 @@ test15
 	marsRover assert: (marsRover position = (0@0)).
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:39:40'!
-test16
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:14:09'!
+test15MoveForwardRotate360AndMoveBackward
 
 	| marsRover startingPosition |
 	startingPosition := 1@1.
@@ -197,6 +185,30 @@ test16
 	marsRover assert: (marsRover position = startingPosition ).
 	! !
 
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:14:43'!
+test17ProcessACorrectLargePath
+
+	| marsRover startingPosition |
+	startingPosition := -2@5.
+	marsRover := MarsRover headingNorthAt: startingPosition.
+	
+	marsRover command: 'frbffflbfbbrfff'.
+	
+	marsRover assert: (marsRover position = (3@4) ).
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:14:53'!
+test18UnknownCommand
+
+	| marsRover startingPosition |
+	startingPosition := 0@0.
+	marsRover := MarsRover headingNorthAt: startingPosition.
+	
+	marsRover command: 'fjf'.
+	
+	marsRover assert: (marsRover position = (3@4) ).
+	! !
+
 
 !classDefinition: #MarsRover category: 'MarsRover'!
 Object subclass: #MarsRover
@@ -205,10 +217,13 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'fm 6/29/2021 19:23:47'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 19:27:53'!
 command: aString 
-	
-	aString asOrderedCollection do: [ :command | self process: command ].
+		| actualCommand commands |
+	commands := aString asOrderedCollection.
+	actualCommand := commands at: 1.
+	[self validCommand: actualCommand ].
+	aString asOrderedCollection do: [ :command | self process: command ].	
 	
 	! !
 
@@ -243,6 +258,14 @@ process: aCommand
 	].
 
 	! !
+
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'IAM 6/30/2021 17:59:41'!
+validCommand: aCommand
+
+	| validCommands |
+	validCommands := #($b $f $l $r).
+	
+	^validCommands includes: aCommand.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
