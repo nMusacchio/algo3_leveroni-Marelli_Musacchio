@@ -1,305 +1,227 @@
 !classDefinition: #MarsRoverTest category: 'MarsRover'!
 TestCase subclass: #MarsRoverTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'startingPosition marsRover'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:41:52'!
 test01RoverDoesntMoveWithEmptyString
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition. 
-	
-	marsRover recieveCommands: ''.
-	
-	self assert: (marsRover position = startingPosition ).
-	self assert: marsRover headingSouth.
+	self createRoverHeadingNorthAt: -1@-1 andSendCommands: ''.
+	self assertThatRoverIsHeadingNorthAt: -1@-1.
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:38:23'!
 test02MoveForwardHeadingNorth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'f'.
-	
-	self assert: (marsRover position = (1@2)).	
-	self assert: marsRover headingNorth.! !
+	self createRoverHeadingNorthAt: 1@1 andSendCommands: 'f'.
+	self assertThatRoverIsHeadingNorthAt: 1@2.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:41:37'!
 test03MoveBackwardHeadingNorth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'b'.
-	
-	self assert: (marsRover position = (1@0)).
-	self assert: marsRover headingNorth.! !
+	self createRoverHeadingNorthAt: 0@0 andSendCommands: 'b'.
+	self assertThatRoverIsHeadingNorthAt: 0@-1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:41:24'!
 test04MoveForwardHeadingSouth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition.
-	
-	marsRover recieveCommands: 'f'.
-	
-	self assert: (marsRover position = (1@0)).	
-	self assert: marsRover headingSouth.! !
+	self createRoverHeadingSouthAt: 3@2 andSendCommands: 'f'.
+	self assertThatRoverIsHeadingSouthAt: 3@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:41:12'!
 test05MoveBackwardHeadingSouth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition.	
-	
-	marsRover recieveCommands: 'b'.
-	
-	self assert: (marsRover position = (1@2)).
-	self assert: marsRover headingSouth ! !
+	self createRoverHeadingSouthAt: 5@5 andSendCommands: 'b'.
+	self assertThatRoverIsHeadingSouthAt: 5@6.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:43:17'!
 test06MoveForwardHeadingEast
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingEastAt: startingPosition.
-	
-	marsRover recieveCommands: 'f'.
-	
-	marsRover assert: (marsRover position = (2@1)).
-	self assert: marsRover headingEast.! !
+	self createRoverHeadingEastAt: 2@2 andSendCommands: 'f'.
+	self assertThatRoverIsHeadingEastAt: 3@2.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:43:49'!
 test07MoveBackwardHeadingEast
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingEastAt: startingPosition	.
-	
-	marsRover recieveCommands: 'b'.
-	
-	self assert: (marsRover position = (0@1)).	
-	self assert: marsRover headingEast.! !
+	self createRoverHeadingEastAt: 1@1 andSendCommands: 'b'.
+	self assertThatRoverIsHeadingEastAt: 0@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:44:29'!
 test08MoveForwardHeadingWest
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingWestAt: startingPosition.
-	
-	marsRover recieveCommands: 'f'.
-	
-	self assert: (marsRover position = (0@1)).
-	self assert: marsRover headingWest.! !
+	self createRoverHeadingWestAt: 1@1 andSendCommands: 'f'.
+	self assertThatRoverIsHeadingWestAt: 0@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:44:55'!
 test09MoveBackwardHeadingWest
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingWestAt: startingPosition.
-	
-	marsRover recieveCommands: 'b'.
-	
-	self assert: (marsRover position = (2@1)).
-	self assert: marsRover headingWest.! !
+	self createRoverHeadingWestAt: 1@1 andSendCommands: 'b'.
+	self assertThatRoverIsHeadingWestAt: 2@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:45:31'!
 test10RotateRightHeadingNorth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'r'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingNorth.
-	self assert: marsRover headingEast.
-	! !
+	self createRoverHeadingNorthAt: 1@1 andSendCommands: 'r'.
+	self assertThatRoverIsHeadingEastAt: 1@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:53:38'!
 test11RotateLeftHeadingNorth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'l'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingNorth.
-	self assert: marsRover headingWest.
+	self createRoverHeadingNorthAt: 6@6 andSendCommands: 'l'.
+	self assertThatRoverIsHeadingWestAt: 6@6.
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:53:26'!
 test12RotateRightHeadingEast
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingEastAt: startingPosition.
-	
-	marsRover recieveCommands: 'r'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingEast.
-	self assert: marsRover headingSouth.
+	self createRoverHeadingEastAt: 0@0 andSendCommands: 'r'.
+	self assertThatRoverIsHeadingSouthAt: 0@0.
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:46:47'!
 test13RotateLeftHeadingEast
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingEastAt: startingPosition.
-	
-	marsRover recieveCommands: 'l'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingEast.
-	self assert: marsRover headingNorth.
-	! !
+	self createRoverHeadingEastAt: 1@1 andSendCommands: 'l'.
+	self assertThatRoverIsHeadingNorthAt: 1@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:53:13'!
 test14RotateRightHeadingSouth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition.
-	
-	marsRover recieveCommands: 'r'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingSouth.
-	self assert: marsRover headingWest.
-	! !
+	self createRoverHeadingSouthAt: 4@7 andSendCommands: 'r'.
+	self assertThatRoverIsHeadingWestAt: 4@7.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:53:01'!
 test15RotateLeftHeadingSouth
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition.
-	
-	marsRover recieveCommands: 'l'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingSouth.
-	self assert: marsRover headingEast.
-	! !
+	self createRoverHeadingSouthAt: -10@-11 andSendCommands: 'l'.
+	self assertThatRoverIsHeadingEastAt: -10@-11.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:48:06'!
 test16RotateRightHeadingWest
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingWestAt: startingPosition.
-	
-	marsRover recieveCommands: 'r'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingWest.
-	self assert: marsRover headingNorth.
+	self createRoverHeadingWestAt: 1@1 andSendCommands: 'r'.
+	self assertThatRoverIsHeadingNorthAt: 1@1.
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:52:41'!
 test17RotateLeftHeadingWest
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingWestAt: startingPosition.
-	
-	marsRover recieveCommands: 'l'.
-	
-	self assert: (marsRover position = startingPosition).
-	self deny: marsRover headingWest.
-	self assert: marsRover headingSouth.
-	! !
+	self createRoverHeadingWestAt: 3@4 andSendCommands: 'l'.
+	self assertThatRoverIsHeadingSouthAt: 3@4.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:52:29'!
 test18MoveForwardAndBackward
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'fb'.
-	
-	self assert: (marsRover position = startingPosition).	
-	self assert: marsRover headingNorth.! !
+	self createRoverHeadingNorthAt: 16@16 andSendCommands: 'fb'.
+	self assertThatRoverIsHeadingNorthAt: 16@16.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:49:55'!
 test19RotateThenMoveForward
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingWestAt: startingPosition.	
-	
-	marsRover recieveCommands: 'lf'.
-	
-	self assert: (marsRover position = (1@0)).	
-	self deny: marsRover headingWest.
-	self assert: marsRover headingSouth.! !
+	self createRoverHeadingWestAt: 3@2 andSendCommands: 'lf'.
+	self assertThatRoverIsHeadingSouthAt: 3@1.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:50:30'!
 test20TurnAroundThenMoveBackward
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.	
-	
-	marsRover recieveCommands: 'rrff'.
-	
-	self assert: (marsRover position = (1@-1)).	
-	self deny: marsRover headingNorth.
-	self assert: marsRover headingSouth.! !
+	self createRoverHeadingNorthAt: 2@2 andSendCommands: 'rrff'.
+	self assertThatRoverIsHeadingSouthAt: 2@0.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:51:02'!
 test21ProcessCorrectlyALargePath
 
-	| marsRover startingPosition |
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.	
-	
-	marsRover recieveCommands: 'llllffrb'.
-	
-	self assert: (marsRover position = (0@3)).	
-	self deny: marsRover headingNorth.
-	self assert: marsRover headingEast.! !
+	self createRoverHeadingNorthAt: 1@1 andSendCommands: 'llllffrb'.
+	self assertThatRoverIsHeadingEastAt: 0@3.
+	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:51:42'!
 test22DoesntProcessIncorrectCommands
 
-	| marsRover startingPosition |	
-	startingPosition := 1@1.
-	marsRover := MarsRover headingNorthAt: startingPosition.
-	
-	marsRover recieveCommands: 'p'.	
-	
-	self assert: (marsRover position = startingPosition).
-	self assert: marsRover headingNorth.! !
+	self createRoverHeadingNorthAt: 10@10 andSendCommands: 'p'.
+	self assertThatRoverIsHeadingNorthAt: 10@10.! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'fm 7/1/2021 13:59:22'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'fm 7/1/2021 16:52:15'!
 test23StopsProcessingCommandsAfterError
 
-	| marsRover startingPosition |	
-	startingPosition := 1@1.
-	marsRover := MarsRover headingSouthAt: startingPosition.
+	self createRoverHeadingSouthAt: 1@1 andSendCommands: 'fflfqffrbflbfb'.
+	self assertThatRoverIsHeadingEastAt: 2@-1.! !
+
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:23:19'!
+assertThatRoverIsHeadingEastAt: aPosition
+
+	self assert: (marsRover position = aPosition).	
+	self assert: marsRover headingEast.
+	self deny: marsRover headingNorth.
+	self deny: marsRover headingSouth.
+	self deny: marsRover headingWest.
 	
-	marsRover recieveCommands: 'fflfqffrbflbfb'.	
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:22:51'!
+assertThatRoverIsHeadingNorthAt: aPosition
+
+	self assert: (marsRover position = aPosition).	
+	self assert: marsRover headingNorth.
+	self deny: marsRover headingSouth.
+	self deny: marsRover headingWest.
+	self deny: marsRover headingEast.
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:24:06'!
+assertThatRoverIsHeadingSouthAt: aPosition
+
+	self assert: (marsRover position = aPosition).	
+	self assert: marsRover headingSouth.
+	self deny: marsRover headingEast.
+	self deny: marsRover headingNorth.
+	self deny: marsRover headingWest.
 	
-	self assert: (marsRover position = (2@-1)).
-	self assert: marsRover headingEast.! !
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:24:15'!
+assertThatRoverIsHeadingWestAt: aPosition
+
+	self assert: (marsRover position = aPosition).	
+	self assert: marsRover headingWest.
+	self deny: marsRover headingEast.
+	self deny: marsRover headingNorth.
+	self deny: marsRover headingSouth.
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:36:02'!
+createRoverHeadingEastAt: aPosition andSendCommands: commands
+	
+	marsRover := MarsRover headingEastAt: aPosition.
+	marsRover recieveCommands: commands.
+	
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:35:28'!
+createRoverHeadingNorthAt: aPosition andSendCommands: commands
+	
+	marsRover := MarsRover headingNorthAt: aPosition.
+	marsRover recieveCommands: commands.
+	
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:36:14'!
+createRoverHeadingSouthAt: aPosition andSendCommands: commands
+	
+	marsRover := MarsRover headingSouthAt: aPosition.
+	marsRover recieveCommands: commands.
+	
+	! !
+
+!MarsRoverTest methodsFor: 'private' stamp: 'fm 7/1/2021 16:36:28'!
+createRoverHeadingWestAt: aPosition andSendCommands: commands
+	
+	marsRover := MarsRover headingWestAt: aPosition.
+	marsRover recieveCommands: commands.
+	
+	! !
 
 
 !classDefinition: #MarsRover category: 'MarsRover'!
@@ -308,6 +230,11 @@ Object subclass: #MarsRover
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover'!
+!MarsRover commentStamp: '<historical>' prior: 0!
+error cuando hay un command erroneo
+SUBCLASE DE COMMANDS
+si esta bien el heading south!
+
 
 !MarsRover methodsFor: 'testing' stamp: 'fm 7/1/2021 13:09:50'!
 headingEast
@@ -335,35 +262,38 @@ position
 	^position.! !
 
 
-!MarsRover methodsFor: 'initialization' stamp: 'fm 7/1/2021 13:04:26'!
-initializeAt: aPosition facing: aDirection
+!MarsRover methodsFor: 'initialization' stamp: 'fm 7/1/2021 14:44:33'!
+initializeAt: aPosition heading: aDirection
 
 	position := aPosition.
 	heading := aDirection.! !
 
 
-!MarsRover methodsFor: 'movement' stamp: 'fm 6/30/2021 20:08:56'!
+!MarsRover methodsFor: 'commands' stamp: 'fm 7/1/2021 14:29:06'!
+recieveCommands: aString 
+	
+	| commandList |
+	commandList := aString asOrderedCollection.
+	
+	 commandList do: [ :command | 
+		(self validCommand: command) ifFalse: [
+			^self.	
+		].
+		self processACommand: command.
+	].	! !
+
+
+!MarsRover methodsFor: 'private' stamp: 'fm 6/30/2021 20:08:56'!
 moveBackward
 
 	^ position 	:= position - heading! !
 
-!MarsRover methodsFor: 'movement' stamp: 'fm 6/30/2021 20:08:42'!
+!MarsRover methodsFor: 'private' stamp: 'fm 6/30/2021 20:08:42'!
 moveForward
 
 	^ position 	:= position + heading! !
 
-!MarsRover methodsFor: 'movement' stamp: 'fm 6/30/2021 20:09:34'!
-rotateLeft
-
-	^ heading := (heading rotatedBy: 3.14/2) rounded! !
-
-!MarsRover methodsFor: 'movement' stamp: 'fm 6/30/2021 20:09:19'!
-rotateRight
-
-	^ heading := (heading rotatedBy: -3.14/2) rounded! !
-
-
-!MarsRover methodsFor: 'commands' stamp: 'fm 7/1/2021 14:29:06'!
+!MarsRover methodsFor: 'private' stamp: 'fm 7/1/2021 14:29:06'!
 processACommand: aCommand
 
 	aCommand = $f ifTrue: [
@@ -381,20 +311,17 @@ processACommand: aCommand
 
 	! !
 
-!MarsRover methodsFor: 'commands' stamp: 'fm 7/1/2021 14:29:06'!
-recieveCommands: aString 
-	
-	| commandList |
-	commandList := aString asOrderedCollection.
-	
-	 commandList do: [ :command | 
-		(self validCommand: command) ifFalse: [
-			^self.	
-		].
-		self processACommand: command.
-	].	! !
+!MarsRover methodsFor: 'private' stamp: 'fm 6/30/2021 20:09:34'!
+rotateLeft
 
-!MarsRover methodsFor: 'commands' stamp: 'IAM 6/30/2021 17:59:41'!
+	^ heading := (heading rotatedBy: 3.14/2) rounded! !
+
+!MarsRover methodsFor: 'private' stamp: 'fm 6/30/2021 20:09:19'!
+rotateRight
+
+	^ heading := (heading rotatedBy: -3.14/2) rounded! !
+
+!MarsRover methodsFor: 'private' stamp: 'IAM 6/30/2021 17:59:41'!
 validCommand: aCommand
 
 	| validCommands |
@@ -408,25 +335,25 @@ validCommand: aCommand
 MarsRover class
 	instanceVariableNames: ''!
 
-!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 13:07:06'!
+!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 14:44:33'!
 headingEastAt: startingPosition
 
-	^self new initializeAt: startingPosition facing: 1@0.! !
+	^self new initializeAt: startingPosition heading: 1@0.! !
 
-!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 13:07:47'!
+!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 14:44:33'!
 headingNorthAt: startingPosition
 
-	^self new initializeAt: startingPosition facing: 0@1.! !
+	^self new initializeAt: startingPosition heading: 0@1.! !
 
-!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 13:07:37'!
+!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 14:44:33'!
 headingSouthAt: startingPosition
 
-	^self new initializeAt: startingPosition facing: 0@-1.! !
+	^self new initializeAt: startingPosition heading: 0@-1.! !
 
-!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 13:07:19'!
+!MarsRover class methodsFor: 'instance creation' stamp: 'fm 7/1/2021 14:44:33'!
 headingWestAt: startingPosition
 
-	^self new initializeAt: startingPosition facing: -1@0.! !
+	^self new initializeAt: startingPosition heading: -1@0.! !
 
 
 !classDefinition: #MarsRoverCommands category: 'MarsRover'!
