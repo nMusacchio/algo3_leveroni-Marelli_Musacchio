@@ -166,6 +166,21 @@ test05DepositCounterpartIsCorrect
 	self assert: transference withdrawPart equals: aDepositPart counterpart.
 	self assert: (80 * peso) equals: transference value.! !
 
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:32:29'!
+test06TransferenceWithAmountZero
+	
+	| accountA accountB |
+	accountA := ReceptiveAccount new.
+	accountB := ReceptiveAccount new.
+	
+	Deposit register: (200 * peso) on: accountA. 
+	
+	self should: [ Transference from: accountA to: accountB for: (0 * peso) ]
+	raise: Error
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = Transference invalidTransferenceErrorMessage.	
+	].! !
+
 !TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:14:49'!
 testxx
 	
@@ -329,9 +344,10 @@ depositPart
 
  	^depositPart ! !
 
-!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 01:12:30'!
+!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:30:54'!
 initializeFrom: senderAccount to: recipientAccount for: anAmount
 
+	(anAmount = (0 * peso)) ifTrue: [self error: Transference invalidTransferenceErrorMessage].
 	depositPart := TransferenceDeposit register: anAmount on: recipientAccount associateWith: self.
 	withdrawPart := TransferenceWithdraw register: anAmount on: senderAccount associateWith: self.! !
 
@@ -356,6 +372,11 @@ from: senderAccount to: recipientAccount for: anAmount
 
 	^self new initializeFrom: senderAccount to: recipientAccount for: anAmount.
 	! !
+
+!Transference class methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:24:37'!
+invalidTransferenceErrorMessage
+
+	^'No es posible realizar esta transferencia.'! !
 
 
 !classDefinition: #TransferenceTransaction category: 'ServiciosFinancieros-Ejercicio'!
