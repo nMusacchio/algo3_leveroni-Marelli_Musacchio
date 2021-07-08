@@ -5,17 +5,17 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:27:20'!
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:00:18'!
 test01
-
+	"se prueba hacer el balance de un portfolio vacio"
 	| portfolio |
 	portfolio := Portfolio new.
 	
 	self assert: (portfolio balance) equals: 0 * peso.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:31:13'!
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:59:58'!
 test02
-
+	"Se prueba agregar una cuenta"
 	| portfolio account |
 	portfolio := Portfolio new.
 	account := ReceptiveAccount new.
@@ -24,6 +24,91 @@ test02
 	portfolio addReceptiveAccount: account.
 	
 	self assert: (portfolio balance) equals: 20 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:59:48'!
+test03
+	"Pruebo remover una cuenta"
+	| portfolio account |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	Deposit register: 20*peso on: account.
+	portfolio addReceptiveAccount: account.
+	portfolio removeReceptiveAccount: account.
+	
+	
+	self assert: (portfolio balance) equals: 0 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:00:30'!
+test04
+	"Portfolio has registered en un portfolio sin cuentas"
+	| portfolio account deposit |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	deposit := Deposit register: 20*peso on: account.
+	
+	
+	self deny: (portfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:01:06'!
+test05
+	"Portfolio has registered en un portfolio con la cuenta correspondiente"
+	| portfolio account deposit |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	deposit := Deposit register: 20*peso on: account.
+	portfolio addReceptiveAccount: account.
+	
+	self assert: (portfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:02:23'!
+test06
+	"Portfolio has registered en un portfolio con varias cuentas entre ellas la cuenta correspondiente"
+	| portfolio account deposit |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	deposit := Deposit register: 20*peso on: account.
+	portfolio addReceptiveAccount: account.
+	portfolio addReceptiveAccount: ReceptiveAccount new.
+	portfolio addReceptiveAccount: ReceptiveAccount new.
+	
+	self assert: (portfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:36:05'!
+test07
+	"Portfolio transactions se fija si tiene bien una unica transaccion y es el deposito"
+	| portfolio account deposit |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	deposit := Deposit register: 20*peso on: account.
+	portfolio addReceptiveAccount: account.
+	
+	self assert: 1 equals: portfolio transactions size.
+	self assert: (portfolio transactions includes: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:41:06'!
+test08
+	"Portfolio transactions con varias transacciones"
+	| portfolio deposit accountA accountB transference withdraw |
+	portfolio := Portfolio new.
+	accountA := ReceptiveAccount new.
+	accountB := ReceptiveAccount new.
+	
+	deposit := Deposit register: 80*peso on: accountA.
+	transference := AccountTransference from: accountA to: accountB for: (10 * peso).
+	withdraw := Withdraw register: 20*peso on: accountA.
+	portfolio addReceptiveAccount: accountA.
+	portfolio addReceptiveAccount: ReceptiveAccount new.
+	
+	
+	self assert: 3 equals: portfolio transactions size.
+	self assert: (portfolio transactions includes: deposit).
+	self assert: (portfolio transactions includes: transference withdrawPart).
+	self assert: (portfolio transactions includes: withdraw).! !
 
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
@@ -306,7 +391,6 @@ AccountTransaction subclass: #Withdraw
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-
 !Withdraw methodsFor: 'value' stamp: 'fm 7/7/2021 11:49:38'!
 effectOnBalance: anAccountBalance
 
@@ -395,10 +479,36 @@ balance
 
 	^accounts inject: 0 * peso into: [:totalBalance :anAccount | totalBalance + anAccount balance]! !
 
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:55:41'!
+hasRegistered: aTransaction
+
+	accounts do: [ :anAccount |
+		(anAccount hasRegistered: aTransaction) ifTrue: [^true]
+	].
+	^false.! !
+
 !Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:30:53'!
 initialize
 	
 	accounts := OrderedCollection new.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 00:11:31'!
+removeReceptiveAccount: anAccount
+
+	accounts remove: anAccount.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:35:27'!
+transactions
+
+	| allTransactions |
+	allTransactions := OrderedCollection new.
+	accounts do: [ :anAccount |
+		anAccount transactions do: [ :aTransaction |
+			allTransactions add: aTransaction
+		]
+	].
+
+	^allTransactions.! !
 
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
@@ -436,14 +546,6 @@ transactions
 
 	^ transactions copy! !
 
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'IAM 7/5/2021 21:04:09'!
-transferTo: anAccount for: anAmount
-
-	Withdraw register: anAmount on: self.
-	Deposit register: anAmount on: anAccount.
-	
-	! !
 
 
 !classDefinition: #TransferencePart category: 'ServiciosFinancieros-Ejercicio'!
