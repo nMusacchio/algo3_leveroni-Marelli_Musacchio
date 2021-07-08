@@ -5,110 +5,209 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:00:18'!
-test01
-	"se prueba hacer el balance de un portfolio vacio"
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:10:38'!
+test01EmptyPortfolioHasZeroBalance
+
 	| portfolio |
 	portfolio := Portfolio new.
 	
-	self assert: (portfolio balance) equals: 0 * peso.! !
+	self assert: portfolio balance equals: 0 * peso.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:59:58'!
-test02
-	"Se prueba agregar una cuenta"
-	| portfolio account |
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:11:05'!
+test02EmptyPortfolioHasNoTransactions
+
+	| portfolio |
 	portfolio := Portfolio new.
-	account := ReceptiveAccount new.
 	
-	Deposit register: 20*peso on: account.
-	portfolio addReceptiveAccount: account.
-	
-	self assert: (portfolio balance) equals: 20 * peso.! !
+	self assert: portfolio transactions isEmpty.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:59:48'!
-test03
-	"Pruebo remover una cuenta"
-	| portfolio account |
-	portfolio := Portfolio new.
-	account := ReceptiveAccount new.
-	
-	Deposit register: 20*peso on: account.
-	portfolio addReceptiveAccount: account.
-	portfolio removeReceptiveAccount: account.
-	
-	
-	self assert: (portfolio balance) equals: 0 * peso.! !
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:14:04'!
+test03EmptyPortfolioDoesntRegisterTransaction
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:00:30'!
-test04
-	"Portfolio has registered en un portfolio sin cuentas"
 	| portfolio account deposit |
 	portfolio := Portfolio new.
 	account := ReceptiveAccount new.
-	
 	deposit := Deposit register: 20*peso on: account.
-	
 	
 	self deny: (portfolio hasRegistered: deposit).! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:01:06'!
-test05
-	"Portfolio has registered en un portfolio con la cuenta correspondiente"
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:19:41'!
+test04BalanceIsCorrectWithOneAccount
+
+	| portfolio account |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	Deposit register: 20*peso on: account.
+	
+	portfolio addAccount: account.
+	
+	self assert: (portfolio balance) equals: 20 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:19:41'!
+test05PortfolioWithAccountRegistersTransaction
+
 	| portfolio account deposit |
 	portfolio := Portfolio new.
 	account := ReceptiveAccount new.
-	
 	deposit := Deposit register: 20*peso on: account.
-	portfolio addReceptiveAccount: account.
+	
+	portfolio addAccount: account.	
 	
 	self assert: (portfolio hasRegistered: deposit).! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:02:23'!
-test06
-	"Portfolio has registered en un portfolio con varias cuentas entre ellas la cuenta correspondiente"
-	| portfolio account deposit |
-	portfolio := Portfolio new.
-	account := ReceptiveAccount new.
-	
-	deposit := Deposit register: 20*peso on: account.
-	portfolio addReceptiveAccount: account.
-	portfolio addReceptiveAccount: ReceptiveAccount new.
-	portfolio addReceptiveAccount: ReceptiveAccount new.
-	
-	self assert: (portfolio hasRegistered: deposit).! !
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:48:53'!
+test06PortfolioWithOneAccountAndMultipleTransactionsGivesCorrectTransactionsList
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:36:05'!
-test07
-	"Portfolio transactions se fija si tiene bien una unica transaccion y es el deposito"
-	| portfolio account deposit |
+	| portfolio account firstDeposit secondDeposit |
 	portfolio := Portfolio new.
-	account := ReceptiveAccount new.
+	account := ReceptiveAccount new.	
+	firstDeposit := Deposit register: 40*peso on: account.
+	secondDeposit := Deposit register: 70*peso on: account.
 	
-	deposit := Deposit register: 20*peso on: account.
-	portfolio addReceptiveAccount: account.
+	portfolio addAccount: account.
 	
-	self assert: 1 equals: portfolio transactions size.
-	self assert: (portfolio transactions includes: deposit).! !
+	self assert: 2 equals: portfolio transactions size.
+	self assert: (portfolio transactions includes: firstDeposit).
+	self assert: (portfolio transactions includes: secondDeposit).! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:41:06'!
-test08
-	"Portfolio transactions con varias transacciones"
-	| portfolio deposit accountA accountB transference withdraw |
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:32:10'!
+test07BalanceIsCorrectWithMultipleAccounts
+
+	| portfolio firstAccount secondAccount |
 	portfolio := Portfolio new.
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
+	firstAccount := ReceptiveAccount new.
+	secondAccount := ReceptiveAccount new.
+	Deposit register: 100*peso on: firstAccount .
+	Withdraw register: 20*peso on: firstAccount .
+	Deposit register: 40*peso on: secondAccount .
 	
-	deposit := Deposit register: 80*peso on: accountA.
-	transference := AccountTransference from: accountA to: accountB for: (10 * peso).
-	withdraw := Withdraw register: 20*peso on: accountA.
-	portfolio addReceptiveAccount: accountA.
-	portfolio addReceptiveAccount: ReceptiveAccount new.
+	portfolio addAccount: firstAccount.
+	portfolio addAccount: secondAccount.
 	
+	self assert: (portfolio balance) equals: 120 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:52:57'!
+test08PortfolioWithMultipleAccountsAndMultipleTransactionsGivesCorrectTransactionsList
+
+	| portfolio deposit firstAccount secondAccount transference withdraw |
+	portfolio := Portfolio new.
+	firstAccount := ReceptiveAccount new.
+	secondAccount := ReceptiveAccount new.
+	deposit := Deposit register: 80*peso on: firstAccount.
+	transference := AccountTransference from: firstAccount to: secondAccount for: (10 * peso).
+	withdraw := Withdraw register: 20*peso on: firstAccount.
 	
-	self assert: 3 equals: portfolio transactions size.
+	portfolio addAccount: firstAccount.
+	portfolio addAccount: secondAccount.
+	
+	self assert: 4 equals: portfolio transactions size.
 	self assert: (portfolio transactions includes: deposit).
 	self assert: (portfolio transactions includes: transference withdrawPart).
+	self assert: (portfolio transactions includes: transference depositPart).
 	self assert: (portfolio transactions includes: withdraw).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:55:28'!
+test09PortfolioWithMultipleAccountsAndMultipleTransactionsHasRegisteredTransaction
+
+	| portfolio deposit firstAccount secondAccount |
+	portfolio := Portfolio new.
+	firstAccount := ReceptiveAccount new.
+	secondAccount := ReceptiveAccount new.
+	deposit := Deposit register: 80*peso on: firstAccount.
+	AccountTransference from: firstAccount to: secondAccount for: (10 * peso).
+	
+	portfolio addAccount: firstAccount.
+	portfolio addAccount: secondAccount.
+	
+	self assert: (portfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:49:44'!
+test10PortfolioWithEmptyPortfolioHasZeroBalance
+
+	| parentPortfolio childPortfolio |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: parentPortfolio balance equals: 0 * peso.
+	
+	! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:50:28'!
+test11PortfolioWithEmptyPortfolioHasZeroTransactions
+
+	| parentPortfolio childPortfolio |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: parentPortfolio transactions isEmpty.
+	! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:53:42'!
+test12PortfolioWithPortfolioWithOneAccountHasCorrectBalance
+
+	| parentPortfolio childPortfolio account |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	Deposit register: 70 * peso on: account.
+	
+	childPortfolio addAccount: account.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: parentPortfolio balance equals: 70* peso.
+	! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:56:31'!
+test13PortfolioWithPortfolioWithOneAccountGivesCorrectTransactionList
+
+	| parentPortfolio childPortfolio account deposit withdraw |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	deposit := Deposit register: 70 * peso on: account.
+	withdraw := Withdraw register: 10 * peso on: account.
+	
+	childPortfolio addAccount: account.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: parentPortfolio transactions size equals: 2.
+	self assert: parentPortfolio transactions includes: deposit.
+	self assert: parentPortfolio transactions includes: withdraw.	! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:58:57'!
+test14PortfolioWithPortfolioWithOneAccountHasRegisteredTransaction
+
+	| parentPortfolio childPortfolio account deposit |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	deposit := Deposit register: 70 * peso on: account.
+	Withdraw register: 10 * peso on: account.
+	
+	childPortfolio addAccount: account.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: (parentPortfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 14:10:39'!
+test15PortfolioWithMultipleAccountsGivesCorrectBalance
+
+	| parentPortfolio childPortfolio firstAccount secondAccount |
+	parentPortfolio := Portfolio new.
+	childPortfolio := Portfolio new.
+	firstAccount := ReceptiveAccount new.
+	secondAccount := ReceptiveAccount new.
+	Deposit register: 70 * peso on: firstAccount.
+	AccountTransference from: firstAccount to: secondAccount  for: 50*peso.
+	
+	parentPortfolio addAccount: firstAccount.
+	childPortfolio addAccount: secondAccount.
+	parentPortfolio addAccount: childPortfolio.
+	
+	self assert: parentPortfolio balance equals: 70 * peso.! !
 
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
@@ -320,6 +419,110 @@ test08TransferenceWithZeroPesos
 	].! !
 
 
+!classDefinition: #Account category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Account
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Account methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:43:02'!
+addAccount: anAccount
+
+	! !
+
+!Account methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:36:05'!
+balance
+
+	self subclassResponsibility.! !
+
+!Account methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:36:36'!
+hasRegistered: aTransaction
+	
+	self subclassResponsibility ! !
+
+!Account methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:35:57'!
+transactions
+
+	self subclassResponsibility.! !
+
+
+!classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
+Account subclass: #Portfolio
+	instanceVariableNames: 'accounts'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:38:48'!
+addAccount: anAccount
+
+	accounts add: anAccount.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:38:55'!
+balance
+
+	^accounts inject: 0 * peso into: [:totalBalance :anAccount | totalBalance + anAccount balance]! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:28:53'!
+hasRegistered: aTransaction
+
+	accounts do: [ :anAccount |
+		(anAccount hasRegistered: aTransaction) ifTrue: [^true]
+	].
+	^false.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 12:39:09'!
+initialize
+
+	accounts := OrderedCollection new.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/8/2021 13:15:22'!
+transactions
+
+	| allTransactions |
+	allTransactions := OrderedCollection new.
+	
+	accounts do: [ :anAccount | allTransactions addAll: anAccount transactions].
+
+	^allTransactions.! !
+
+
+!classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
+Account subclass: #ReceptiveAccount
+	instanceVariableNames: 'transactions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'fm 7/8/2021 13:45:12'!
+initialize
+
+	transactions := OrderedCollection new.! !
+
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/7/2021 11:56:50'!
+balance
+
+	^transactions inject: 0 * peso into: [:runningBalance :aTransaction | aTransaction effectOnBalance: runningBalance ]! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/8/2021 13:35:07'!
+hasRegistered: aTransaction
+
+	^ transactions includes: aTransaction
+! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/8/2021 13:40:21'!
+register: aTransaction
+
+	transactions add: aTransaction ! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/8/2021 12:57:10'!
+transactions 
+
+	^ transactions copy! !
+
+
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: 'value'
@@ -460,92 +663,6 @@ from: senderAccount to: recipientAccount for: anAmount
 invalidTransferenceErrorMessage
 
 	^'No es posible realizar esta transferencia.'! !
-
-
-!classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
-Object subclass: #Portfolio
-	instanceVariableNames: 'accounts'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Ejercicio'!
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:29:12'!
-addReceptiveAccount: anAccount
-
-	accounts add: anAccount.! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:29:16'!
-balance
-
-	^accounts inject: 0 * peso into: [:totalBalance :anAccount | totalBalance + anAccount balance]! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 01:55:41'!
-hasRegistered: aTransaction
-
-	accounts do: [ :anAccount |
-		(anAccount hasRegistered: aTransaction) ifTrue: [^true]
-	].
-	^false.! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:30:53'!
-initialize
-	
-	accounts := OrderedCollection new.! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 00:11:31'!
-removeReceptiveAccount: anAccount
-
-	accounts remove: anAccount.! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'IAM 7/8/2021 02:35:27'!
-transactions
-
-	| allTransactions |
-	allTransactions := OrderedCollection new.
-	accounts do: [ :anAccount |
-		anAccount transactions do: [ :aTransaction |
-			allTransactions add: aTransaction
-		]
-	].
-
-	^allTransactions.! !
-
-
-!classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
-Object subclass: #ReceptiveAccount
-	instanceVariableNames: 'transactions'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Ejercicio'!
-
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'NR 10/17/2019 15:06:56'!
-initialize
-
-	transactions := OrderedCollection new.! !
-
-
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/7/2021 11:56:50'!
-balance
-
-	^transactions inject: 0 * peso into: [:runningBalance :aTransaction | aTransaction effectOnBalance: runningBalance ]! !
-
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'NR 10/17/2019 03:28:43'!
-hasRegistered: aTransaction
-
-	^ transactions includes: aTransaction 
-! !
-
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'HernanWilkinson 7/13/2011 18:37'!
-register: aTransaction
-
-	transactions add: aTransaction 
-! !
-
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'HernanWilkinson 7/13/2011 18:37'!
-transactions 
-
-	^ transactions copy! !
-
 
 
 !classDefinition: #TransferencePart category: 'ServiciosFinancieros-Ejercicio'!
