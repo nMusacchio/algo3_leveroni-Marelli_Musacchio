@@ -1,3 +1,31 @@
+!classDefinition: #PortfolioTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #PortfolioTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:27:20'!
+test01
+
+	| portfolio |
+	portfolio := Portfolio new.
+	
+	self assert: (portfolio balance) equals: 0 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:31:13'!
+test02
+
+	| portfolio account |
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	
+	Deposit register: 20*peso on: account.
+	portfolio addReceptiveAccount: account.
+	
+	self assert: (portfolio balance) equals: 20 * peso.! !
+
+
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
 TestCase subclass: #ReceptiveAccountTest
 	instanceVariableNames: ''
@@ -96,117 +124,139 @@ TestCase subclass: #TransferenceTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:12:32'!
-test01DoATransference
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 12:41:56'!
+test01TransferenceAffectsInvolvedAccountsBalanceCorrectly
 	
-	| accountA accountB |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
+	| senderAccount recipientAccount |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+	Deposit register: 100 * peso on: recipientAccount .
 	
-	Deposit register: 100 * peso on: accountA.
+	AccountTransference from: senderAccount to: recipientAccount for: 40 * peso. 
 	
-	accountA transferTo: accountB for: (80 * peso).
-	
-	self assert: (80 * peso) equals: accountB balance.
-	self assert: (20 * peso) equals: accountA balance.! !
+	self assert: senderAccount balance equals: (60 * peso).
+	self assert: recipientAccount balance equals: (140 * peso).! !
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:12:47'!
-test02DoMultipleTransferences
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 12:42:36'!
+test02TransferenceIsForCorrectValue
 	
-	| accountA accountB |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
+	| senderAccount recipientAccount transference |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
 	
-	Deposit register: 100 * peso on: accountA.
+	transference := AccountTransference from: senderAccount to: recipientAccount for: 70 * peso. 
 	
-	accountA transferTo: accountB for: (80 * peso).
-	accountA transferTo: accountB for: (20 * peso).
-	accountB transferTo: accountA for: (15 * peso).
-	
-	self assert: (85 * peso) equals: accountB balance.
-	self assert: (15 * peso) equals: accountA balance.! !
+	self assert: transference value equals: 70 * peso.! !
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:13:21'!
-test03TransferenceValueIsCorrect
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 13:37:04'!
+test03DepositPartIsRegisteredOnRecipientAccount
 	
-	| accountA accountB transfer |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
-	
-	Deposit register: (200 * peso) on: accountA. 
-	transfer := Transference from: accountA to: accountB for: (80 * peso).
-	
-	self assert: (80*peso) equals: transfer value.! !
+	| senderAccount recipientAccount transference depositPart |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:14:41'!
-test04WithdrawCounterpartIsCorrect
+	transference := AccountTransference from: senderAccount to: recipientAccount for: 80 * peso.
+	depositPart := transference depositPart.
 	
-	| accountA accountB transference aWithdrawPart |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
-	
-	Deposit register: (200 * peso) on: accountA. 
-	transference := Transference from: accountA to: accountB for: (80 * peso).
-	aWithdrawPart := transference withdrawPart.
-	
-	self assert: transference depositPart equals: aWithdrawPart counterpart.
-	self assert: (80 * peso) equals: transference value.! !
+	self assert: (recipientAccount hasRegistered: depositPart).! !
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:15:51'!
-test05DepositCounterpartIsCorrect
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 14:01:28'!
+test04WithdrawPartIsRegisteredOnSenderAccount
 	
-	| accountA accountB transference aDepositPart |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
-	
-	Deposit register: (200 * peso) on: accountA. 
-	transference := Transference from: accountA to: accountB for: (80 * peso).
-	aDepositPart := transference depositPart .
-	
-	self assert: transference withdrawPart equals: aDepositPart counterpart.
-	self assert: (80 * peso) equals: transference value.! !
+	| senderAccount recipientAccount transference withdrawPart |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
 
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:32:29'!
-test06TransferenceWithAmountZero
+	transference := AccountTransference from: senderAccount to: recipientAccount for: 80 * peso.
+	withdrawPart := transference withdrawPart .
 	
-	| accountA accountB |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
+	self assert: (senderAccount hasRegistered: withdrawPart).! !
+
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 14:02:56'!
+test05WithdrawPartsCounterpartIsDepositPart
 	
-	Deposit register: (200 * peso) on: accountA. 
+	| senderAccount recipientAccount transference depositPart withdrawPart |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+
+	transference := AccountTransference from: senderAccount to: recipientAccount for: 80 * peso.
+	withdrawPart := transference withdrawPart.
+	depositPart := transference depositPart.
 	
-	self should: [ Transference from: accountA to: accountB for: (0 * peso) ]
+	self assert: withdrawPart counterpart equals: depositPart.! !
+
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 14:03:52'!
+test06DepositPartsCounterpartIsWithdrawPart
+	
+	| senderAccount recipientAccount transference depositPart withdrawPart |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+
+	transference := AccountTransference from: senderAccount to: recipientAccount for: 80 * peso.
+	withdrawPart := transference withdrawPart.
+	depositPart := transference depositPart.
+	
+	self assert: depositPart counterpart equals: withdrawPart.! !
+
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 14:08:09'!
+test07MultipleTransferences
+	
+	| senderAccount recipientAccount |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+	Deposit register: 20 * peso on: recipientAccount.
+	
+	AccountTransference from: senderAccount to: recipientAccount for: 40 * peso. 
+	AccountTransference from: senderAccount to: recipientAccount for: 60 * peso.
+		
+	self assert: senderAccount balance equals: 0 * peso.
+	self assert: recipientAccount balance equals: 120 * peso.	
+	! !
+
+!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 14:11:39'!
+test08TransferenceWithZeroPesos
+	
+	| senderAccount recipientAccount |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+	
+	self should: [ AccountTransference from: senderAccount to: recipientAccount for: 0 * peso ]
 	raise: Error
 	withExceptionDo: [ :anError |
-		self assert: anError messageText = Transference invalidTransferenceErrorMessage.	
+		self assert: anError messageText = AccountTransference invalidTransferenceErrorMessage.	
 	].! !
-
-!TransferenceTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:14:49'!
-testxx
-	
-	| accountA accountB transfer |
-	accountA := ReceptiveAccount new.
-	accountB := ReceptiveAccount new.
-	
-	Deposit register: (200 * peso) on: accountA. 
-	transfer := Transference from: accountA to: accountB for: (80 * peso).
-	
-	self assert: transfer value = (80 * peso).
-	self assert: accountA balance equals: (120 * peso).
-	self assert: accountB balance equals: (80 * peso).! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountTransaction
-	instanceVariableNames: ''
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
+!AccountTransaction methodsFor: 'initialization' stamp: 'fm 7/7/2021 11:50:26'!
+initializeFor: aValue
+
+	value := aValue! !
+
+
+!AccountTransaction methodsFor: 'testing' stamp: 'fm 7/7/2021 13:50:58'!
+effectOnBalance: anAccountBalance
+	
+	self subclassResponsibility.! !
+
+!AccountTransaction methodsFor: 'testing' stamp: 'fm 7/7/2021 11:48:00'!
 value 
 
-	self subclassResponsibility ! !
+	^value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -227,21 +277,15 @@ register: aValue on: account
 
 !classDefinition: #Deposit category: 'ServiciosFinancieros-Ejercicio'!
 AccountTransaction subclass: #Deposit
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
-initializeFor: aValue
+!Deposit methodsFor: 'account' stamp: 'fm 7/7/2021 11:48:59'!
+effectOnBalance: anAccountBalance
 
-	value := aValue ! !
-
-
-!Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
-value
-
-	^ value! !
+	^anAccountBalance + self value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -257,21 +301,18 @@ for: aValue
 
 !classDefinition: #Withdraw category: 'ServiciosFinancieros-Ejercicio'!
 AccountTransaction subclass: #Withdraw
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
-initializeFor: aValue
 
-	value := aValue ! !
+!Withdraw methodsFor: 'value' stamp: 'fm 7/7/2021 11:49:38'!
+effectOnBalance: anAccountBalance
 
-
-!Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
-value
-
-	^ value! !
+	^anAccountBalance - self value.
+	
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -283,6 +324,81 @@ Withdraw class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+
+!classDefinition: #AccountTransference category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #AccountTransference
+	instanceVariableNames: 'depositPart withdrawPart value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!AccountTransference methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:23:03'!
+depositPart
+
+ 	^depositPart ! !
+
+!AccountTransference methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:18:28'!
+initializeFrom: senderAccount to: recipientAccount for: anAmount
+
+	value := anAmount.
+	depositPart := TransferenceDepositPart associatedWith: self.
+	withdrawPart := TransferenceWithdrawPart associatedWith: self.
+	
+	recipientAccount register: depositPart.
+	senderAccount register: withdrawPart.
+	! !
+
+!AccountTransference methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:14:28'!
+value
+
+	^value.! !
+
+!AccountTransference methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:23:18'!
+withdrawPart
+
+ 	^withdrawPart ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountTransference class' category: 'ServiciosFinancieros-Ejercicio'!
+AccountTransference class
+	instanceVariableNames: ''!
+
+!AccountTransference class methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:06:28'!
+from: senderAccount to: recipientAccount for: anAmount
+
+	(anAmount isZero) ifTrue: [self error: AccountTransference invalidTransferenceErrorMessage].
+	^self new initializeFrom: senderAccount to: recipientAccount for: anAmount.
+	! !
+
+!AccountTransference class methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:24:37'!
+invalidTransferenceErrorMessage
+
+	^'No es posible realizar esta transferencia.'! !
+
+
+!classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Portfolio
+	instanceVariableNames: 'accounts'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:29:12'!
+addReceptiveAccount: anAccount
+
+	accounts add: anAccount.! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:29:16'!
+balance
+
+	^accounts inject: 0 * peso into: [:totalBalance :anAccount | totalBalance + anAccount balance]! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:30:53'!
+initialize
+	
+	accounts := OrderedCollection new.! !
 
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
@@ -298,12 +414,10 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'IAM 7/7/2021 02:07:47'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/7/2021 11:56:50'!
 balance
 
-	^transactions inject: 0 * peso into: [:subBalance :aBalance | 
-		subBalance + (((aBalance isKindOf: Deposit) or: [aBalance isKindOf: TransferenceDeposit]) ifTrue: aBalance value ifFalse: (aBalance value) negated) .
-	].! !
+	^transactions inject: 0 * peso into: [:runningBalance :aTransaction | aTransaction effectOnBalance: runningBalance ]! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'NR 10/17/2019 03:28:43'!
 hasRegistered: aTransaction
@@ -332,147 +446,72 @@ transferTo: anAccount for: anAmount
 	! !
 
 
-!classDefinition: #Transference category: 'ServiciosFinancieros-Ejercicio'!
-Object subclass: #Transference
-	instanceVariableNames: 'depositPart withdrawPart'
+!classDefinition: #TransferencePart category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #TransferencePart
+	instanceVariableNames: 'associatedTransference'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:23:03'!
-depositPart
+!TransferencePart methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:20:44'!
+counterpart
 
- 	^depositPart ! !
+	self subclassResponsibility.! !
 
-!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:30:54'!
-initializeFrom: senderAccount to: recipientAccount for: anAmount
+!TransferencePart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 13:48:23'!
+effectOnBalance: anAccountBalance
 
-	(anAmount = (0 * peso)) ifTrue: [self error: Transference invalidTransferenceErrorMessage].
-	depositPart := TransferenceDeposit register: anAmount on: recipientAccount associateWith: self.
-	withdrawPart := TransferenceWithdraw register: anAmount on: senderAccount associateWith: self.! !
+	self subclassResponsibility.! !
 
-!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/5/2021 21:19:17'!
-value
+!TransferencePart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:17:14'!
+initializeWith: aTransference
 
-	^80 * peso.! !
-
-!Transference methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:23:18'!
-withdrawPart
-
- 	^withdrawPart ! !
+	associatedTransference := aTransference.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Transference class' category: 'ServiciosFinancieros-Ejercicio'!
-Transference class
+!classDefinition: 'TransferencePart class' category: 'ServiciosFinancieros-Ejercicio'!
+TransferencePart class
 	instanceVariableNames: ''!
 
-!Transference class methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:33:14'!
-from: senderAccount to: recipientAccount for: anAmount
+!TransferencePart class methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:17:14'!
+associatedWith: aTransference
 
-	^self new initializeFrom: senderAccount to: recipientAccount for: anAmount.
-	! !
-
-!Transference class methodsFor: 'as yet unclassified' stamp: 'IAM 7/7/2021 02:24:37'!
-invalidTransferenceErrorMessage
-
-	^'No es posible realizar esta transferencia.'! !
+	^self new initializeWith: aTransference.
+! !
 
 
-!classDefinition: #TransferenceTransaction category: 'ServiciosFinancieros-Ejercicio'!
-Object subclass: #TransferenceTransaction
+!classDefinition: #TransferenceDepositPart category: 'ServiciosFinancieros-Ejercicio'!
+TransferencePart subclass: #TransferenceDepositPart
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferenceTransaction methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:20:44'!
+!TransferenceDepositPart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 13:47:11'!
 counterpart
 
-	self subclassResponsibility.! !
+	^associatedTransference withdrawPart.! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+!TransferenceDepositPart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:19:31'!
+effectOnBalance: anAccountBalance
 
-!classDefinition: 'TransferenceTransaction class' category: 'ServiciosFinancieros-Ejercicio'!
-TransferenceTransaction class
-	instanceVariableNames: ''!
-
-!TransferenceTransaction class methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 21:23:21'!
-register: aValue on: anAccount associateWith: aTransfer
-
-	| transaction |
-	
-	transaction := self for: aValue associateWith: aTransfer.
-	anAccount register: transaction.
-		
-	^ transaction! !
+	^anAccountBalance + associatedTransference value.! !
 
 
-!classDefinition: #TransferenceDeposit category: 'ServiciosFinancieros-Ejercicio'!
-TransferenceTransaction subclass: #TransferenceDeposit
-	instanceVariableNames: 'value transferAssociated'
+!classDefinition: #TransferenceWithdrawPart category: 'ServiciosFinancieros-Ejercicio'!
+TransferencePart subclass: #TransferenceWithdrawPart
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferenceDeposit methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:20:26'!
+!TransferenceWithdrawPart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 13:47:11'!
 counterpart
 
-	^transferAssociated withdrawPart.! !
+	^associatedTransference depositPart.! !
 
-!TransferenceDeposit methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:52:11'!
-initializeFor: anAmount associateWith: aTransfer
+!TransferenceWithdrawPart methodsFor: 'as yet unclassified' stamp: 'fm 7/7/2021 20:19:39'!
+effectOnBalance: anAccountBalance
 
-	value := anAmount.
-	transferAssociated := aTransfer.! !
-
-!TransferenceDeposit methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:37:55'!
-value
-
-	^value.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferenceDeposit class' category: 'ServiciosFinancieros-Ejercicio'!
-TransferenceDeposit class
-	instanceVariableNames: ''!
-
-!TransferenceDeposit class methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:50:25'!
-for: anAmount associateWith: aTransfer
-
-	^ self new initializeFor: anAmount associateWith: aTransfer.! !
-
-
-!classDefinition: #TransferenceWithdraw category: 'ServiciosFinancieros-Ejercicio'!
-TransferenceTransaction subclass: #TransferenceWithdraw
-	instanceVariableNames: 'value transferAssociated'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Ejercicio'!
-
-!TransferenceWithdraw methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 23:19:50'!
-counterpart
-
-	^transferAssociated depositPart.! !
-
-!TransferenceWithdraw methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:51:56'!
-initializeFor: anAmount associateWith: aTransfer
-
-	value := anAmount.
-	transferAssociated := aTransfer.! !
-
-!TransferenceWithdraw methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 20:38:07'!
-value
-
-	^value.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferenceWithdraw class' category: 'ServiciosFinancieros-Ejercicio'!
-TransferenceWithdraw class
-	instanceVariableNames: ''!
-
-!TransferenceWithdraw class methodsFor: 'as yet unclassified' stamp: 'IAM 7/6/2021 21:16:52'!
-for: anAmount associateWith: aTransfer
-
-	^ self new initializeFor: anAmount associateWith: aTransfer.! !
+	^anAccountBalance - associatedTransference value.! !
