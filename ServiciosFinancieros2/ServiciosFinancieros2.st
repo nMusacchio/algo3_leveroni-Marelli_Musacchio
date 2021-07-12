@@ -1,9 +1,9 @@
-!classDefinition: #PortfolioTest category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #PortfolioTest category: 'ServiciosFinancieros2'!
 TestCase subclass: #PortfolioTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !PortfolioTest methodsFor: 'tests' stamp: 'HAW 5/25/2019 11:16:26'!
 test01BalanceOfPortfolioWithoutAccountsIsZero
@@ -213,12 +213,12 @@ test15PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 			self assert: portfolioToModify accountsIsEmpty ]! !
 
 
-!classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros2'!
 TestCase subclass: #ReceptiveAccountTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 7/1/2021 03:10:43'!
 test01ReceptiveAccountHaveZeroAsBalanceWhenCreated 
@@ -304,12 +304,12 @@ test07AccountKnowsItsTransactions
 ! !
 
 
-!classDefinition: #TransferTest category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #TransferTest category: 'ServiciosFinancieros2'!
 TestCase subclass: #TransferTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !TransferTest methodsFor: 'as yet unclassified' stamp: 'LL 9/20/2020 21:07:03'!
 test01ATransferDecreasesBalanceFromOriginAccountAndIncreasesItForDestinationAccount
@@ -408,15 +408,15 @@ test06CannotTransferAZeroAmount
 ! !
 
 
-!classDefinition: #ZReportTest category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #ZReportTest category: 'ServiciosFinancieros2'!
 TestCase subclass: #ZReportTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 16:58:43'!
-test01
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:39:16'!
+test01AccountReportOnEmptyReceptiveAccount
 
 	| account report |
 	account := ReceptiveAccount new.
@@ -426,8 +426,8 @@ test01
 	self assert: report size equals: 1. 
 	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 17:26:35'!
-test02
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:39:42'!
+test02AccountReportOnReceptiveAccountWithDeposit
 
 	| account report |
 	account := ReceptiveAccount new.
@@ -439,8 +439,8 @@ test02
 	self assert: (report at: 1) equals: 'Deposito por 10 pesos'.
 	self assert: (report at: 2) equals: 'Balance = 10 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 17:28:44'!
-test03
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:41:00'!
+test03AccountReportOnReceptiveAccountWithWithdraw
 
 	| account report |
 	account := ReceptiveAccount new.
@@ -454,8 +454,8 @@ test03
 	self assert: (report at: 2) equals: 'Retiro por 20 pesos'.
 	self assert: (report at: 3) equals: 'Balance = 80 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 17:38:41'!
-test04
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:42:38'!
+test04AccountReportOnReceptiveAccountWithTransferWithdraw
 
 	| report recipientAccount senderAccount |
 	senderAccount := ReceptiveAccount new.
@@ -472,8 +472,8 @@ test04
 	self assert: (report at: 3) equals: 'Salida por transferencia de 5 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 70 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 17:42:26'!
-test05
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:43:24'!
+test05AccountReportOnReceptiveAccountWithTransferDeposit
 
 	| report recipientAccount senderAccount |
 	senderAccount := ReceptiveAccount new.
@@ -490,13 +490,45 @@ test05
 	self assert: (report at: 3) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 160 pesos'.! !
 
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:46:36'!
+test06AccountReportOnPortfolioWithEmptyReceptiveAccount
+
+	| account report portfolio |
+	account := ReceptiveAccount new.
+	portfolio := Portfolio with: account.
+	
+	report := account accountReport.
+	
+	self assert: report size equals: 1. 
+	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:47:47'!
+test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
+
+	| report portfolio recipientAccount senderAccount |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 160 * peso on: senderAccount.
+	Withdraw register: 30 * peso on: senderAccount.
+	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
+	portfolio := Portfolio with: senderAccount with: recipientAccount.
+	
+	report := portfolio accountReport.
+	
+	self assert: report size equals: 5. 
+	self assert: (report at: 1) equals: 'Deposito por 160 pesos'.
+	self assert: (report at: 2) equals: 'Retiro por 30 pesos'.
+	self assert: (report at: 3) equals: 'Salida por transferencia de 30 pesos'.
+	self assert: (report at: 4) equals: 'Entrada por transferencia de 30 pesos'.
+	self assert: (report at: 5) equals: 'Balance = 130 pesos'.! !
+
 
-!classDefinition: #Account category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #Account category: 'ServiciosFinancieros2'!
 Object subclass: #Account
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !Account methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 12:23:40'!
 balance
@@ -525,18 +557,32 @@ isComposedBy: anAccount
 	self subclassResponsibility! !
 
 
+!Account methodsFor: 'private' stamp: 'fm 7/11/2021 20:59:10'!
+accountReport
+
+	| strings |
+	strings := OrderedCollection new.
+	self transactions do: [ :transaction | 	
+		(transaction isKindOf: Withdraw ) ifTrue: [strings add: 'Retiro por ', transaction value asString].
+		(transaction isKindOf: Deposit) ifTrue: [strings add: 'Deposito por ', transaction value asString].
+		(transaction isKindOf: TransferWithdrawLeg) ifTrue: [strings add: 'Salida por transferencia de ', transaction value asString].
+		(transaction isKindOf: TransferDepositLeg) ifTrue: [strings add: 'Entrada por transferencia de ', transaction value asString].
+	].
+	strings add: 'Balance = ', (self balance asString).
+	^strings.! !
+
 !Account methodsFor: 'private' stamp: 'HAW 5/25/2019 12:23:27'!
 addTransactionsTo: aCollectionOfTransactions
 
 	self subclassResponsibility ! !
 
 
-!classDefinition: #Portfolio category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #Portfolio category: 'ServiciosFinancieros2'!
 Account subclass: #Portfolio
 	instanceVariableNames: 'accounts parents'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !Portfolio methodsFor: 'initialization' stamp: 'HAW 5/25/2019 12:03:18'!
 initialize
@@ -642,7 +688,7 @@ signalCanNotAddAccount
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Portfolio class' category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: 'Portfolio class' category: 'ServiciosFinancieros2'!
 Portfolio class
 	instanceVariableNames: ''!
 
@@ -667,12 +713,12 @@ with: anAccount with: anotherAccount
 		yourself! !
 
 
-!classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros2'!
 Account subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
 initialize
@@ -738,12 +784,12 @@ accountReport
 	^strings.! !
 
 
-!classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #AccountTransaction category: 'ServiciosFinancieros2'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
 value 
@@ -757,12 +803,12 @@ affectBalance: aBalance
 	self subclassResponsibility ! !
 
 
-!classDefinition: #Deposit category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #Deposit category: 'ServiciosFinancieros2'!
 AccountTransaction subclass: #Deposit
 	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
 initializeFor: aValue
@@ -783,7 +829,7 @@ affectBalance: aBalance
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Deposit class' category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: 'Deposit class' category: 'ServiciosFinancieros2'!
 Deposit class
 	instanceVariableNames: ''!
 
@@ -804,12 +850,12 @@ register: aValue on: account
 	^ transaction! !
 
 
-!classDefinition: #TransferLeg category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #TransferLeg category: 'ServiciosFinancieros2'!
 AccountTransaction subclass: #TransferLeg
 	instanceVariableNames: 'transfer'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !TransferLeg methodsFor: 'value' stamp: 'LL 9/20/2020 22:27:32'!
 value
@@ -824,7 +870,7 @@ initializeWith: aTransfer
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TransferLeg class' category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: 'TransferLeg class' category: 'ServiciosFinancieros2'!
 TransferLeg class
 	instanceVariableNames: ''!
 
@@ -839,12 +885,12 @@ of: aTransfer on: anAccount
 	^transaction! !
 
 
-!classDefinition: #TransferDepositLeg category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #TransferDepositLeg category: 'ServiciosFinancieros2'!
 TransferLeg subclass: #TransferDepositLeg
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !TransferDepositLeg methodsFor: 'accessing' stamp: 'LL 9/20/2020 22:26:10'!
 withdrawLeg
@@ -858,12 +904,12 @@ affectBalance: aBalance
 	^aBalance + self value! !
 
 
-!classDefinition: #TransferWithdrawLeg category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #TransferWithdrawLeg category: 'ServiciosFinancieros2'!
 TransferLeg subclass: #TransferWithdrawLeg
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !TransferWithdrawLeg methodsFor: 'accessing' stamp: 'LL 9/20/2020 22:25:47'!
 depositLeg
@@ -877,12 +923,12 @@ affectBalance: aBalance
 	^aBalance - self value! !
 
 
-!classDefinition: #Withdraw category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #Withdraw category: 'ServiciosFinancieros2'!
 AccountTransaction subclass: #Withdraw
 	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
 initializeFor: aValue
@@ -903,7 +949,7 @@ affectBalance: aBalance
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Withdraw class' category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: 'Withdraw class' category: 'ServiciosFinancieros2'!
 Withdraw class
 	instanceVariableNames: ''!
 
@@ -924,12 +970,12 @@ register: aValue on: account
 	^ transaction! !
 
 
-!classDefinition: #Transfer category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: #Transfer category: 'ServiciosFinancieros2'!
 Object subclass: #Transfer
 	instanceVariableNames: 'value withdrawLeg depositLeg'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'ServiciosFinancieros-Solucion'!
+	category: 'ServiciosFinancieros2'!
 
 !Transfer methodsFor: 'value' stamp: 'LL 9/20/2020 21:13:00'!
 value
@@ -957,7 +1003,7 @@ initializeWith: aValue withdrawLeg: aWithdraw depositLeg: aDeposit
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Transfer class' category: 'ServiciosFinancieros-Solucion'!
+!classDefinition: 'Transfer class' category: 'ServiciosFinancieros2'!
 Transfer class
 	instanceVariableNames: ''!
 
