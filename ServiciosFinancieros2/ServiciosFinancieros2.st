@@ -415,31 +415,31 @@ TestCase subclass: #ZReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2'!
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:39:16'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:32'!
 test01AccountReportOnEmptyReceptiveAccount
 
 	| account report |
 	account := ReceptiveAccount new.
 	
-	report := account accountReport.
+	report := AccountReport for: account.
 	
 	self assert: report size equals: 1. 
 	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:39:42'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:50'!
 test02AccountReportOnReceptiveAccountWithDeposit
 
 	| account report |
 	account := ReceptiveAccount new.
 	Deposit register: 10 * peso on: account.
 	
-	report := account accountReport.
+	report := AccountReport for: account.	
 	
 	self assert: report size equals: 2. 
 	self assert: (report at: 1) equals: 'Deposito por 10 pesos'.
 	self assert: (report at: 2) equals: 'Balance = 10 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:41:00'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:55'!
 test03AccountReportOnReceptiveAccountWithWithdraw
 
 	| account report |
@@ -447,14 +447,14 @@ test03AccountReportOnReceptiveAccountWithWithdraw
 	Deposit register: 100 * peso on: account.
 	Withdraw register: 20 * peso on: account.
 	
-	report := account accountReport.
-	
+	report := AccountReport for: account.	
+		
 	self assert: report size equals: 3. 
 	self assert: (report at: 1) equals: 'Deposito por 100 pesos'.
 	self assert: (report at: 2) equals: 'Retiro por 20 pesos'.
 	self assert: (report at: 3) equals: 'Balance = 80 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:42:38'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:04'!
 test04AccountReportOnReceptiveAccountWithTransferWithdraw
 
 	| report recipientAccount senderAccount |
@@ -464,15 +464,15 @@ test04AccountReportOnReceptiveAccountWithTransferWithdraw
 	Withdraw register: 15 * peso on: senderAccount.
 	Transfer amount: 5 * peso from: senderAccount to: recipientAccount.
 	
-	report := senderAccount accountReport.
-	
+	report := AccountReport for: senderAccount .	
+		
 	self assert: report size equals: 4. 
 	self assert: (report at: 1) equals: 'Deposito por 90 pesos'.
 	self assert: (report at: 2) equals: 'Retiro por 15 pesos'.
 	self assert: (report at: 3) equals: 'Salida por transferencia de 5 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 70 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:43:24'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:10'!
 test05AccountReportOnReceptiveAccountWithTransferDeposit
 
 	| report recipientAccount senderAccount |
@@ -482,27 +482,27 @@ test05AccountReportOnReceptiveAccountWithTransferDeposit
 	Withdraw register: 20 * peso on: senderAccount.
 	Transfer amount: 30 * peso from: recipientAccount to: senderAccount.
 	
-	report := senderAccount accountReport.
-	
+	report := AccountReport for: senderAccount.	
+		
 	self assert: report size equals: 4. 
 	self assert: (report at: 1) equals: 'Deposito por 150 pesos'.
 	self assert: (report at: 2) equals: 'Retiro por 20 pesos'.
 	self assert: (report at: 3) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 160 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:46:36'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:34'!
 test06AccountReportOnPortfolioWithEmptyReceptiveAccount
 
 	| account report portfolio |
 	account := ReceptiveAccount new.
 	portfolio := Portfolio with: account.
 	
-	report := account accountReport.
-	
+	report := AccountReport for: portfolio.	
+		
 	self assert: report size equals: 1. 
 	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/11/2021 21:47:47'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:45'!
 test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
 
 	| report portfolio recipientAccount senderAccount |
@@ -513,14 +513,37 @@ test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
 	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
 	portfolio := Portfolio with: senderAccount with: recipientAccount.
 	
-	report := portfolio accountReport.
-	
+	report := AccountReport for: portfolio.	
+		
 	self assert: report size equals: 5. 
 	self assert: (report at: 1) equals: 'Deposito por 160 pesos'.
 	self assert: (report at: 2) equals: 'Retiro por 30 pesos'.
 	self assert: (report at: 3) equals: 'Salida por transferencia de 30 pesos'.
 	self assert: (report at: 4) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 5) equals: 'Balance = 130 pesos'.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:56:21'!
+test08
+
+	| account report |
+	account := ReceptiveAccount new.
+	
+	report := NetTransferenceReport for: account.
+	
+	self assert: report equals: 0 * peso.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:00:18'!
+test09
+
+	| senderAccount recipientAccount report |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
+	
+	report := NetTransferenceReport for: senderAccount.
+	
+	self assert: report equals: -30 * peso.! !
 
 
 !classDefinition: #Account category: 'ServiciosFinancieros2'!
@@ -556,20 +579,13 @@ isComposedBy: anAccount
 
 	self subclassResponsibility! !
 
+!Account methodsFor: 'composition' stamp: 'fm 7/14/2021 20:06:00'!
+netTransferReport
 
-!Account methodsFor: 'private' stamp: 'fm 7/11/2021 20:59:10'!
-accountReport
+	^self transactions do: [
+		:transaction | 
+	]! !
 
-	| strings |
-	strings := OrderedCollection new.
-	self transactions do: [ :transaction | 	
-		(transaction isKindOf: Withdraw ) ifTrue: [strings add: 'Retiro por ', transaction value asString].
-		(transaction isKindOf: Deposit) ifTrue: [strings add: 'Deposito por ', transaction value asString].
-		(transaction isKindOf: TransferWithdrawLeg) ifTrue: [strings add: 'Salida por transferencia de ', transaction value asString].
-		(transaction isKindOf: TransferDepositLeg) ifTrue: [strings add: 'Entrada por transferencia de ', transaction value asString].
-	].
-	strings add: 'Balance = ', (self balance asString).
-	^strings.! !
 
 !Account methodsFor: 'private' stamp: 'HAW 5/25/2019 12:23:27'!
 addTransactionsTo: aCollectionOfTransactions
@@ -769,19 +785,52 @@ isComposedBy: anAccount
 	^self = anAccount ! !
 
 
-!ReceptiveAccount methodsFor: 'report' stamp: 'fm 7/11/2021 17:43:26'!
-accountReport
-	
-	| strings |
-	strings := OrderedCollection new.
-	transactions do: [ :transaction | 	
-		(transaction isKindOf: Withdraw ) ifTrue: [strings add: 'Retiro por ', transaction value asString].
-		(transaction isKindOf: Deposit) ifTrue: [strings add: 'Deposito por ', transaction value asString].
-		(transaction isKindOf: TransferWithdrawLeg) ifTrue: [strings add: 'Salida por transferencia de ', transaction value asString].
-		(transaction isKindOf: TransferDepositLeg) ifTrue: [strings add: 'Entrada por transferencia de ', transaction value asString].
-	].
-	strings add: 'Balance = ', (self balance asString).
-	^strings.! !
+
+!classDefinition: #AccountReport category: 'ServiciosFinancieros2'!
+Object subclass: #AccountReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2'!
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:41:17'!
+visitDeposit
+
+	^'Deposito por '.
+	! !
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:41:57'!
+visitTransferDeposit
+
+	^'Entrada por transferencia de '.
+	! !
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:42:01'!
+visitTransferWithdraw
+
+	^'Salida por transferencia de '.
+	! !
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:41:28'!
+visitWithdraw
+
+	^'Retiro por '.
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountReport class' category: 'ServiciosFinancieros2'!
+AccountReport class
+	instanceVariableNames: ''!
+
+!AccountReport class methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:47:22'!
+for: anAccount
+
+	| reportLines |
+	reportLines := OrderedCollection new.
+	anAccount transactions do: [ :transaction | 	reportLines add: (transaction accept: self new), transaction value asString ].
+	reportLines add: 'Balance = ', (anAccount balance asString).
+	^reportLines.! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros2'!
@@ -796,6 +845,11 @@ value
 
 	self subclassResponsibility ! !
 
+
+!AccountTransaction methodsFor: 'balance' stamp: 'fm 7/14/2021 19:34:50'!
+accept: visitor
+
+	self subclassResponsibility.! !
 
 !AccountTransaction methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:25:39'!
 affectBalance: aBalance
@@ -821,6 +875,12 @@ value
 
 	^ value! !
 
+
+!Deposit methodsFor: 'balance' stamp: 'fm 7/14/2021 19:38:53'!
+accept: visitor
+
+	^visitor visitDeposit.
+	! !
 
 !Deposit methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:25:02'!
 affectBalance: aBalance
@@ -898,6 +958,12 @@ withdrawLeg
 	^transfer withdrawLeg! !
 
 
+!TransferDepositLeg methodsFor: 'balance' stamp: 'fm 7/14/2021 19:39:39'!
+accept: visitor
+
+	^visitor visitTransferDeposit.
+	! !
+
 !TransferDepositLeg methodsFor: 'balance' stamp: 'LL 9/20/2020 22:27:49'!
 affectBalance: aBalance
 
@@ -916,6 +982,12 @@ depositLeg
 
 	^transfer depositLeg! !
 
+
+!TransferWithdrawLeg methodsFor: 'balance' stamp: 'fm 7/14/2021 19:39:55'!
+accept: visitor
+
+	^visitor visitTransferWithdraw.
+	! !
 
 !TransferWithdrawLeg methodsFor: 'balance' stamp: 'LL 9/20/2020 22:27:55'!
 affectBalance: aBalance
@@ -941,6 +1013,12 @@ value
 
 	^ value! !
 
+
+!Withdraw methodsFor: 'balance' stamp: 'fm 7/14/2021 19:40:40'!
+accept: visitor
+
+	^visitor visitWithdraw.
+	! !
 
 !Withdraw methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:25:15'!
 affectBalance: aBalance
@@ -968,6 +1046,25 @@ register: aValue on: account
 	account register: transaction.
 		
 	^ transaction! !
+
+
+!classDefinition: #NetTransferenceReport category: 'ServiciosFinancieros2'!
+Object subclass: #NetTransferenceReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NetTransferenceReport class' category: 'ServiciosFinancieros2'!
+NetTransferenceReport class
+	instanceVariableNames: ''!
+
+!NetTransferenceReport class methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:56:37'!
+for: anAccount
+
+	^0 * peso.! !
 
 
 !classDefinition: #Transfer category: 'ServiciosFinancieros2'!
