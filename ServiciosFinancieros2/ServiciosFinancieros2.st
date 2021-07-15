@@ -415,7 +415,7 @@ TestCase subclass: #ZReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2'!
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:32'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:22'!
 test01AccountReportOnEmptyReceptiveAccount
 
 	| account report |
@@ -424,7 +424,7 @@ test01AccountReportOnEmptyReceptiveAccount
 	report := AccountReport for: account.
 	
 	self assert: report size equals: 1. 
-	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
+	self assert: (report at: 1) equals: 'Balance = 0'.! !
 
 !ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:50'!
 test02AccountReportOnReceptiveAccountWithDeposit
@@ -490,7 +490,7 @@ test05AccountReportOnReceptiveAccountWithTransferDeposit
 	self assert: (report at: 3) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 160 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:34'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:34'!
 test06AccountReportOnPortfolioWithEmptyReceptiveAccount
 
 	| account report portfolio |
@@ -500,7 +500,7 @@ test06AccountReportOnPortfolioWithEmptyReceptiveAccount
 	report := AccountReport for: portfolio.	
 		
 	self assert: report size equals: 1. 
-	self assert: (report at: 1) equals: 'Balance = 0 pesos'.! !
+	self assert: (report at: 1) equals: 'Balance = 0'.! !
 
 !ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:45'!
 test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
@@ -522,17 +522,17 @@ test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
 	self assert: (report at: 4) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 5) equals: 'Balance = 130 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:56:21'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:55'!
 test08
 
 	| account report |
 	account := ReceptiveAccount new.
 	
-	report := NetTransferenceReport for: account.
+	report := account netTransferReport.
 	
-	self assert: report equals: 0 * peso.! !
+	self assert: report equals: 0.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:00:18'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:16:03'!
 test09
 
 	| senderAccount recipientAccount report |
@@ -541,9 +541,34 @@ test09
 	Deposit register: 100 * peso on: senderAccount.
 	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
 	
-	report := NetTransferenceReport for: senderAccount.
+	report := senderAccount netTransferReport.
 	
 	self assert: report equals: -30 * peso.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:28:45'!
+test10
+
+	| senderAccount recipientAccount report |
+	senderAccount := ReceptiveAccount new.
+	recipientAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: senderAccount.
+	Transfer amount: 60 * peso from: senderAccount to: recipientAccount.
+	Withdraw register: 10 * peso on: recipientAccount.
+	
+	report := recipientAccount netTransferReport.
+	
+	self assert: report equals: 60 * peso.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:44:15'!
+test11
+
+	|  portfolio report account |
+	account := ReceptiveAccount new.
+	portfolio := Portfolio with: account.
+	
+	report := portfolio netTransferReport.
+	
+	self assert: report equals: 0.! !
 
 
 !classDefinition: #Account category: 'ServiciosFinancieros2'!
@@ -552,6 +577,11 @@ Object subclass: #Account
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2'!
+!Account commentStamp: '<historical>' prior: 0!
+preguntar tdd portfolio account
+net transfer que seria mejor visitor
+!
+
 
 !Account methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 12:23:40'!
 balance
@@ -579,12 +609,13 @@ isComposedBy: anAccount
 
 	self subclassResponsibility! !
 
-!Account methodsFor: 'composition' stamp: 'fm 7/14/2021 20:06:00'!
+!Account methodsFor: 'composition' stamp: 'fm 7/14/2021 20:25:13'!
 netTransferReport
 
-	^self transactions do: [
-		:transaction | 
-	]! !
+	| transfers |
+	
+	transfers := self transactions select: [:aTransfer | aTransfer isKindOf: TransferLeg] .
+	^transfers inject: 0 into: [ :currentSum :aTransfer | aTransfer affectBalance: currentSum].! !
 
 
 !Account methodsFor: 'private' stamp: 'HAW 5/25/2019 12:23:27'!
@@ -607,10 +638,10 @@ initialize
 	parents := OrderedCollection new.! !
 
 
-!Portfolio methodsFor: 'main protocol' stamp: 'fm 7/11/2021 17:23:14'!
+!Portfolio methodsFor: 'main protocol' stamp: 'fm 7/14/2021 20:44:30'!
 balance
 	
-	^accounts sum: [ :anAccount | anAccount balance ] ifEmpty: [ 0 * peso ]! !
+	^accounts sum: [ :anAccount | anAccount balance ] ifEmpty: [ 0 ]! !
 
 !Portfolio methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 11:28:29'!
 hasRegistered: aTransaction
@@ -743,11 +774,11 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/11/2021 17:23:07'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'fm 7/14/2021 20:44:38'!
 balance
 
 	^transactions 
-		inject: 0 * peso
+		inject: 0
 		into: [ :currentBalance :transaction | transaction affectBalance: currentBalance ]! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'NR 10/21/2019 18:55:56'!
@@ -823,12 +854,12 @@ visitWithdraw
 AccountReport class
 	instanceVariableNames: ''!
 
-!AccountReport class methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:47:22'!
+!AccountReport class methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:52:43'!
 for: anAccount
 
 	| reportLines |
 	reportLines := OrderedCollection new.
-	anAccount transactions do: [ :transaction | 	reportLines add: (transaction accept: self new), transaction value asString ].
+	anAccount transactions do: [ :transaction | 	reportLines add: (transaction accept: self new), (transaction value asString) ].
 	reportLines add: 'Balance = ', (anAccount balance asString).
 	^reportLines.! !
 
