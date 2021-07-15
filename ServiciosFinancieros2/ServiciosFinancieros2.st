@@ -452,6 +452,21 @@ test12NetTransferReportOnPortfolio
 	
 	self assert: aReport equals: -60 * peso.! !
 
+!ReportTest methodsFor: 'tests' stamp: 'IAM 7/15/2021 18:53:29'!
+test12NetTransferReportOnPortfolioNOTDD
+
+	aPortfolio := Portfolio with: aSenderAccount.
+	
+	Deposit register: 60 * peso on: aSenderAccount.
+	Transfer amount: 20 * peso from: aSenderAccount to: aReceiverAccount.
+	Transfer amount: 40 * peso from: aSenderAccount to: aReceiverAccount.
+	
+	
+	aReport := NetTransferReport for: aPortfolio.
+	
+	
+	self assert: aReport equals: -60 * peso.! !
+
 
 !ReportTest methodsFor: 'setup' stamp: 'fm 7/15/2021 14:52:05'!
 setUp
