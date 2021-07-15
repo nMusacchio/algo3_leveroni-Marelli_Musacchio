@@ -410,61 +410,63 @@ test06CannotTransferAZeroAmount
 
 !classDefinition: #ZReportTest category: 'ServiciosFinancieros2'!
 TestCase subclass: #ZReportTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'anAccount aSenderAccount aReceiverAccount'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2'!
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:22'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:42:12'!
+setUp
+
+	anAccount := ReceptiveAccount new.
+	aSenderAccount := ReceptiveAccount new.
+	aReceiverAccount := ReceptiveAccount new.! !
+
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:42:28'!
 test01AccountReportOnEmptyReceptiveAccount
 
-	| account report |
-	account := ReceptiveAccount new.
-	
-	report := AccountReport for: account.
+	| report |
+	report := AccountReport for: anAccount.
 	
 	self assert: report size equals: 1. 
 	self assert: (report at: 1) equals: 'Balance = 0'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:50'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:42:40'!
 test02AccountReportOnReceptiveAccountWithDeposit
 
-	| account report |
-	account := ReceptiveAccount new.
-	Deposit register: 10 * peso on: account.
+	| report |
+	Deposit register: 10 * peso on: anAccount.
 	
-	report := AccountReport for: account.	
+	report := AccountReport for: anAccount.	
 	
 	self assert: report size equals: 2. 
 	self assert: (report at: 1) equals: 'Deposito por 10 pesos'.
 	self assert: (report at: 2) equals: 'Balance = 10 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:43:55'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:42:51'!
 test03AccountReportOnReceptiveAccountWithWithdraw
 
-	| account report |
-	account := ReceptiveAccount new.
-	Deposit register: 100 * peso on: account.
-	Withdraw register: 20 * peso on: account.
+	| report |
 	
-	report := AccountReport for: account.	
+	Deposit register: 100 * peso on: anAccount.
+	Withdraw register: 20 * peso on: anAccount.
+	
+	report := AccountReport for: anAccount.	
 		
 	self assert: report size equals: 3. 
 	self assert: (report at: 1) equals: 'Deposito por 100 pesos'.
 	self assert: (report at: 2) equals: 'Retiro por 20 pesos'.
 	self assert: (report at: 3) equals: 'Balance = 80 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:04'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:43:16'!
 test04AccountReportOnReceptiveAccountWithTransferWithdraw
 
-	| report recipientAccount senderAccount |
-	senderAccount := ReceptiveAccount new.
-	recipientAccount := ReceptiveAccount new.
-	Deposit register: 90 * peso on: senderAccount.
-	Withdraw register: 15 * peso on: senderAccount.
-	Transfer amount: 5 * peso from: senderAccount to: recipientAccount.
+	| report |
+	Deposit register: 90 * peso on: aSenderAccount .
+	Withdraw register: 15 * peso on: aSenderAccount.
+	Transfer amount: 5 * peso from: aSenderAccount to: aReceiverAccount .
 	
-	report := AccountReport for: senderAccount .	
+	report := AccountReport for: aSenderAccount .	
 		
 	self assert: report size equals: 4. 
 	self assert: (report at: 1) equals: 'Deposito por 90 pesos'.
@@ -472,17 +474,16 @@ test04AccountReportOnReceptiveAccountWithTransferWithdraw
 	self assert: (report at: 3) equals: 'Salida por transferencia de 5 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 70 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:10'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:43:50'!
 test05AccountReportOnReceptiveAccountWithTransferDeposit
 
-	| report recipientAccount senderAccount |
-	senderAccount := ReceptiveAccount new.
-	recipientAccount := ReceptiveAccount new.
-	Deposit register: 150 * peso on: senderAccount.
-	Withdraw register: 20 * peso on: senderAccount.
-	Transfer amount: 30 * peso from: recipientAccount to: senderAccount.
+	| report |
 	
-	report := AccountReport for: senderAccount.	
+	Deposit register: 150 * peso on: aSenderAccount .
+	Withdraw register: 20 * peso on: aSenderAccount.
+	Transfer amount: 30 * peso from: aReceiverAccount to: aSenderAccount.
+	
+	report := AccountReport for: aSenderAccount.	
 		
 	self assert: report size equals: 4. 
 	self assert: (report at: 1) equals: 'Deposito por 150 pesos'.
@@ -490,28 +491,27 @@ test05AccountReportOnReceptiveAccountWithTransferDeposit
 	self assert: (report at: 3) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 4) equals: 'Balance = 160 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:34'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:44:02'!
 test06AccountReportOnPortfolioWithEmptyReceptiveAccount
 
-	| account report portfolio |
-	account := ReceptiveAccount new.
-	portfolio := Portfolio with: account.
+	| report portfolio |
+	
+	portfolio := Portfolio with: anAccount .
 	
 	report := AccountReport for: portfolio.	
 		
 	self assert: report size equals: 1. 
 	self assert: (report at: 1) equals: 'Balance = 0'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 19:44:45'!
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:44:26'!
 test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
 
-	| report portfolio recipientAccount senderAccount |
-	senderAccount := ReceptiveAccount new.
-	recipientAccount := ReceptiveAccount new.
-	Deposit register: 160 * peso on: senderAccount.
-	Withdraw register: 30 * peso on: senderAccount.
-	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
-	portfolio := Portfolio with: senderAccount with: recipientAccount.
+	| report portfolio |
+	
+	Deposit register: 160 * peso on: aSenderAccount .
+	Withdraw register: 30 * peso on: aSenderAccount.
+	Transfer amount: 30 * peso from: aSenderAccount to: aReceiverAccount .
+	portfolio := Portfolio with: aSenderAccount with: aReceiverAccount.
 	
 	report := AccountReport for: portfolio.	
 		
@@ -522,49 +522,43 @@ test07AccountReportOnPortfolioWithMultipleReceptiveAccounts
 	self assert: (report at: 4) equals: 'Entrada por transferencia de 30 pesos'.
 	self assert: (report at: 5) equals: 'Balance = 130 pesos'.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:53:55'!
-test08
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:48:36'!
+test08TransferReportOnUnusedReceptiveAccount
 
-	| account report |
-	account := ReceptiveAccount new.
+	| report |
 	
-	report := account netTransferReport.
+	report := anAccount netTransferReport.
 	
 	self assert: report equals: 0.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:16:03'!
-test09
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:48:28'!
+test09TransferReportOnReceptiveAccountWithOneTransferWithdraw
 
-	| senderAccount recipientAccount report |
-	senderAccount := ReceptiveAccount new.
-	recipientAccount := ReceptiveAccount new.
-	Deposit register: 100 * peso on: senderAccount.
-	Transfer amount: 30 * peso from: senderAccount to: recipientAccount.
+	| report |
+	Deposit register: 100 * peso on: aSenderAccount.
+	Transfer amount: 30 * peso from: aSenderAccount to: aReceiverAccount .
 	
-	report := senderAccount netTransferReport.
+	report := aSenderAccount netTransferReport.
 	
 	self assert: report equals: -30 * peso.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:28:45'!
-test10
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:48:21'!
+test10TransferReportOnReceptiveAccountWithDepositAndTransferWithdraw
 
-	| senderAccount recipientAccount report |
-	senderAccount := ReceptiveAccount new.
-	recipientAccount := ReceptiveAccount new.
-	Deposit register: 100 * peso on: senderAccount.
-	Transfer amount: 60 * peso from: senderAccount to: recipientAccount.
-	Withdraw register: 10 * peso on: recipientAccount.
+	| report |
+	Deposit register: 100 * peso on: aSenderAccount .
+	Transfer amount: 60 * peso from: aSenderAccount to: aReceiverAccount .
+	Withdraw register: 10 * peso on: aReceiverAccount.
 	
-	report := recipientAccount netTransferReport.
+	report := aReceiverAccount netTransferReport.
 	
 	self assert: report equals: 60 * peso.! !
 
-!ZReportTest methodsFor: 'as yet unclassified' stamp: 'fm 7/14/2021 20:44:15'!
-test11
+!ZReportTest methodsFor: 'as yet unclassified' stamp: 'IAM 7/15/2021 13:49:12'!
+test11TransferReportOnPortfolioWithUnusedAccount
 
-	|  portfolio report account |
-	account := ReceptiveAccount new.
-	portfolio := Portfolio with: account.
+	|  portfolio report |
+	portfolio := Portfolio with: anAccount .
 	
 	report := portfolio netTransferReport.
 	
@@ -814,7 +808,6 @@ addedTo: aPortfolio
 isComposedBy: anAccount
 
 	^self = anAccount ! !
-
 
 
 !classDefinition: #AccountReport category: 'ServiciosFinancieros2'!
