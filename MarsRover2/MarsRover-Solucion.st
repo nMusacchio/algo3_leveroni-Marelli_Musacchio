@@ -294,22 +294,22 @@ test12StatusWindowHeadingWhenRotatingWest
 
 !classDefinition: #MarsRover category: 'MarsRover-Solucion'!
 Object subclass: #MarsRover
-	instanceVariableNames: 'position head positionObservers headingObservers'
+	instanceVariableNames: 'position head'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-Solucion'!
 !MarsRover commentStamp: '<historical>' prior: 0!
 objetos no completos log y window, error cuando se pide log sin agregar al rover
-testear log para ambos position y heading nottdd!
+testear log para ambos position y heading nottdd
+preguntar solucion!
 
 
-!MarsRover methodsFor: 'initialization' stamp: 'fm 7/20/2021 18:38:35'!
+!MarsRover methodsFor: 'initialization' stamp: 'fm 7/20/2021 19:26:50'!
 initializeStartingAt: aPosition heading: aCardinalPoint 
 
-	position := aPosition.
-	head := MarsRoverHead of: self facing: aCardinalPoint.
-	positionObservers := OrderedCollection new.
-	headingObservers := OrderedCollection new.! !
+	position := ModificationObserverProxy forProxee: aPosition withUpdateBlock: [:anObserver :aNewPosition | anObserver updatePositionTo: aNewPosition].
+	
+	head := ModificationObserverProxy forProxee: (MarsRoverHead of: self facing: aCardinalPoint) withUpdateBlock: [:anObserver :aNewHead | anObserver updateHeadingTo: aNewHead].! !
 
 
 !MarsRover methodsFor: 'process commands' stamp: 'LL 6/30/2021 15:54:14'!
@@ -323,10 +323,10 @@ processCommands: aStringWithCommands
 ! !
 
 
-!MarsRover methodsFor: 'testing' stamp: 'LL 6/30/2021 19:47:14'!
+!MarsRover methodsFor: 'testing' stamp: 'fm 7/20/2021 19:22:28'!
 isAt: aPosition heading: aCardinalPoint
 
-	^ position = aPosition and: [ head isHeading: aCardinalPoint ]! !
+	^ (position value) = aPosition and: [ head value isHeading: aCardinalPoint ]! !
 
 
 !MarsRover methodsFor: 'private - process commands' stamp: 'LL 6/30/2021 15:54:11'!
@@ -339,13 +339,13 @@ invalidCommandErrorMessage
 
 	^'Invalid command'! !
 
-!MarsRover methodsFor: 'private - process commands' stamp: 'LL 6/30/2021 19:48:47'!
+!MarsRover methodsFor: 'private - process commands' stamp: 'fm 7/20/2021 19:22:47'!
 processCommand: aCommand
 
-	(self isForwardCommand: aCommand) ifTrue: [ ^ head movingForward ].
-	(self isBackwardCommand: aCommand) ifTrue: [ ^ head movingBackwards ].
-	(self isRotateRightCommand: aCommand) ifTrue: [ ^ head rotateRight ].
-	(self isRotateLeftCommand: aCommand) ifTrue: [ ^ head rotateLeft ].
+	(self isForwardCommand: aCommand) ifTrue: [ ^ head value movingForward ].
+	(self isBackwardCommand: aCommand) ifTrue: [ ^ head value movingBackwards ].
+	(self isRotateRightCommand: aCommand) ifTrue: [ ^ head value rotateRight ].
+	(self isRotateLeftCommand: aCommand) ifTrue: [ ^ head value rotateLeft ].
 ! !
 
 
@@ -397,12 +397,10 @@ moveUp
 
 	self step: (0@1)! !
 
-!MarsRover methodsFor: 'dd - moving' stamp: 'fm 7/20/2021 18:03:08'!
+!MarsRover methodsFor: 'dd - moving' stamp: 'fm 7/20/2021 19:16:17'!
 step: aPoint
-
-	position := position + aPoint.
-	self updatePositionObservers.
-	! !
+	
+	position updateTo: ((position value) + aPoint).! !
 
 
 !MarsRover methodsFor: 'dd - heading' stamp: 'IAM 7/19/2021 21:20:05'!
@@ -420,11 +418,10 @@ headSouth
 
 	self headTo:  (MarsRoverHeadFacingSouth of: self).! !
 
-!MarsRover methodsFor: 'dd - heading' stamp: 'fm 7/20/2021 18:05:11'!
+!MarsRover methodsFor: 'dd - heading' stamp: 'fm 7/20/2021 19:22:08'!
 headTo: aNewMarsRoverHead
 
-	head := aNewMarsRoverHead.
-	self updateHeadingObservers.! !
+	head updateTo: aNewMarsRoverHead.! !
 
 !MarsRover methodsFor: 'dd - heading' stamp: 'IAM 7/19/2021 21:18:50'!
 headWest
@@ -432,27 +429,15 @@ headWest
 	self headTo: (MarsRoverHeadFacingWest of: self).! !
 
 
-!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 18:00:01'!
+!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 19:21:38'!
 attachHeadingObserver: aHeadingObserver
 
-	headingObservers add: aHeadingObserver.! !
+	head attachObserver: aHeadingObserver.! !
 
-!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 17:59:37'!
+!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 19:13:58'!
 attachPositionObserver: aPositionObserver
 
-	positionObservers add: aPositionObserver.! !
-
-!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 18:04:47'!
-updateHeadingObservers
-	
-	headingObservers do: [:aHeadingObserver | aHeadingObserver updateHeadingTo: head].
-	! !
-
-!MarsRover methodsFor: 'log' stamp: 'fm 7/20/2021 18:04:14'!
-updatePositionObservers
-	
-	positionObservers do: [:aPositionObserver | aPositionObserver updatePositionTo: position].
-	! !
+	position attachObserver: aPositionObserver.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -773,3 +758,50 @@ updateHeadingTo: aNewMarsRoverHead
 updatePositionTo: aNewPosition
 
 	currentPositionTextField := aNewPosition asString.! !
+
+
+!classDefinition: #ModificationObserverProxy category: 'MarsRover-Solucion'!
+Object subclass: #ModificationObserverProxy
+	instanceVariableNames: 'proxee observers updateBlock'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-Solucion'!
+
+!ModificationObserverProxy methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 19:01:29'!
+attachObserver: anObserver
+	
+	observers add: anObserver.! !
+
+!ModificationObserverProxy methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 19:03:35'!
+initilizeFor: aProxee with: anUpdateBlock
+
+	updateBlock := anUpdateBlock.
+	observers := OrderedCollection new.
+	proxee := aProxee.! !
+
+!ModificationObserverProxy methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 19:11:30'!
+notifyModification
+
+	observers do: [:anObserver | updateBlock value: anObserver value: proxee].! !
+
+!ModificationObserverProxy methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 18:59:23'!
+updateTo: aNewProxee
+
+	proxee := aNewProxee.
+	self notifyModification.! !
+
+!ModificationObserverProxy methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 18:48:48'!
+value
+
+	^proxee.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'ModificationObserverProxy class' category: 'MarsRover-Solucion'!
+ModificationObserverProxy class
+	instanceVariableNames: ''!
+
+!ModificationObserverProxy class methodsFor: 'as yet unclassified' stamp: 'fm 7/20/2021 19:18:23'!
+forProxee: aProxee withUpdateBlock: anUpdateBlock
+
+	^self new initilizeFor: aProxee with: anUpdateBlock.! !
